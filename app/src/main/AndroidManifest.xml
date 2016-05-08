@@ -15,6 +15,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- UI start -->
+        <activity android:name=".view.UIMainActivity" />
+        <!-- UI end -->
+        <activity android:name=".view.activity.canvas_dome.CanvasDomeActivity"></activity>
     </application>
 
 </manifest>

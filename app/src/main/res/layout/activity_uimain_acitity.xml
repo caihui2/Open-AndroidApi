@@ -3,13 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.chyang.androidapidome.MainActivity">
+    tools:context=".view.UIMainActivity">
 
     <Button
-        android:id="@+id/bt_ui"
+        android:id="@+id/canvas_dome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="UI relevant"/>
+        android:text="canvas_dome"/>
 
 </LinearLayout>
