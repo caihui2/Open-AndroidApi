@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.chyang.androidapidome.Service.DomeServiceActivity;
 import com.chyang.androidapidome.view.UIMainActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -14,6 +15,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.bt_ui).setOnClickListener(this);
+        findViewById(R.id.bt_service).setOnClickListener(this);
     }
 
     @Override
@@ -22,6 +24,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.bt_ui:
                 mIntent = new Intent(this, UIMainActivity.class);
+                break;
+            case R.id.bt_service:
+                mIntent = new Intent(this, DomeServiceActivity.class);
                 break;
         }
 

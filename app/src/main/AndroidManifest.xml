@@ -18,8 +18,12 @@
 
         <!-- UI start -->
         <activity android:name=".view.UIMainActivity" />
+        <activity android:name=".view.activity.canvas_dome.CanvasDomeActivity" />
         <!-- UI end -->
-        <activity android:name=".view.activity.canvas_dome.CanvasDomeActivity"></activity>
+        <!-- service start-->
+        <activity android:name=".Service.DomeServiceActivity"></activity>
+        <service android:name=".Service.DomeService"></service>
+        <!-- service end -->
     </application>
 
 </manifest>
