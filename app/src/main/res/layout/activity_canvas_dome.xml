@@ -9,4 +9,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.chyang.androidapidome.view.activity.canvas_dome.CanvasDomeActivity">
 
+    <com.chyang.androidapidome.view.ui.canvas_dome.DomeView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </RelativeLayout>
