@@ -4,8 +4,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
+
+import com.chyang.androidapidome.IMyAidlInterface;
 
 /**
  * Created by chyang on 16/5/20.
@@ -14,7 +17,8 @@ public class DomeService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        Toast.makeText(this, "onBind", Toast.LENGTH_SHORT).show();
+        return mDomeBinder;
     }
 
     @Override
@@ -40,7 +44,13 @@ public class DomeService extends Service {
     }
 
 
-    class DomeBinder extends Binder {
-        public
+    class DomeBinder extends IMyAidlInterface.Stub {
+
+        @Override
+        public void tosts() throws RemoteException {
+            print();
+        }
     }
+
+    private final DomeBinder mDomeBinder = new DomeBinder();
 }

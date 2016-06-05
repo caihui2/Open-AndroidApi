@@ -10,6 +10,12 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        ndk {
+            moduleName = "jniTest"
+            ldLibs "log","z","m"
+            abiFilters "armeabi", "armeabi-v7a","x86"
+        }
     }
     buildTypes {
         release {
@@ -17,6 +23,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 }
 
 dependencies {

@@ -16,5 +16,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="停止服务"/>
+    <Button
+        android:id="@+id/binder_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="绑定服务"/>
+
+    <Button
+        android:id="@+id/call_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="(绑定)调用方法"/>
 
 </LinearLayout>

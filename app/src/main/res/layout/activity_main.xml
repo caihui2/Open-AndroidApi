@@ -16,5 +16,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="service_dome"/>
+    <Button
+        android:id="@+id/bt_jni"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="jni_dome"/>
 
 </LinearLayout>

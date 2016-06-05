@@ -32,6 +32,7 @@ public class DomeView extends View {
         mPaint.setTextSize(20);
         mCanvasLoop = new CanvasLoop(this);
         mCanvasLoop.start();
+
     }
 
 

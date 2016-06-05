@@ -20,10 +20,19 @@
         <activity android:name=".view.UIMainActivity" />
         <activity android:name=".view.activity.canvas_dome.CanvasDomeActivity" />
         <!-- UI end -->
-        <!-- service start-->
-        <activity android:name=".Service.DomeServiceActivity"></activity>
-        <service android:name=".Service.DomeService"></service>
+        <!-- service start -->
+        <activity android:name=".Service.DomeServiceActivity" />
+
+        <service android:name=".Service.DomeService">
+            <intent-filter>
+                <action android:name="com.chyang.service" />
+            </intent-filter>
+        </service>
         <!-- service end -->
+
+        <!--jni start-->
+        <activity android:name=".jni.DomeJniActivity"></activity>
+        <!--jni end-->
     </application>
 
 </manifest>
