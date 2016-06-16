@@ -30,9 +30,11 @@
         </service>
         <!-- service end -->
 
-        <!--jni start-->
-        <activity android:name=".jni.DomeJniActivity"></activity>
-        <!--jni end-->
+
+        <!-- jni start -->
+        <activity android:name=".jni.DomeJniActivity" />
+        <!-- jni end -->
+        <activity android:name=".opencv.OpenCvDomeActivity"></activity>
     </application>
 
 </manifest>

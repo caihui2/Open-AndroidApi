@@ -48,6 +48,7 @@ public class DomeServiceActivity extends AppCompatActivity implements View.OnCli
                     mServices.tosts();
                 } catch (RemoteException e) {
                     e.printStackTrace();
+
                 }
                 break;
         }

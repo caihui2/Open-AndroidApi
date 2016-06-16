@@ -7,9 +7,14 @@ import android.view.View;
 
 import com.chyang.androidapidome.Service.DomeServiceActivity;
 import com.chyang.androidapidome.jni.DomeJniActivity;
+import com.chyang.androidapidome.opencv.OpenCvDomeActivity;
 import com.chyang.androidapidome.view.UIMainActivity;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.OpenCVLoader;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.bt_ui).setOnClickListener(this);
         findViewById(R.id.bt_service).setOnClickListener(this);
         findViewById(R.id.bt_jni).setOnClickListener(this);
+        findViewById(R.id.opencv).setOnClickListener(this);
     }
 
     @Override
@@ -33,8 +39,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bt_jni:
                 mIntent = new Intent(this, DomeJniActivity.class);
                 break;
+            case R.id.opencv:
+                mIntent = new Intent(this, OpenCvDomeActivity.class);
+                break;
         }
 
         if(mIntent != null) startActivity(mIntent);
     }
+
 }
