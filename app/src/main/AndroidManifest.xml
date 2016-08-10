@@ -19,6 +19,7 @@
         <!-- UI start -->
         <activity android:name=".view.UIMainActivity" />
         <activity android:name=".view.activity.canvas_dome.CanvasDomeActivity" />
+        <activity android:name=".view.activity.canvas_dome.GLTextureActivity"></activity>
         <!-- UI end -->
         <!-- service start -->
         <activity android:name=".Service.DomeServiceActivity" />
@@ -34,7 +35,8 @@
         <!-- jni start -->
         <activity android:name=".jni.DomeJniActivity" />
         <!-- jni end -->
-        <activity android:name=".opencv.OpenCvDomeActivity"></activity>
+        <activity android:name=".opencv.OpenCvDomeActivity" />
+
     </application>
 
 </manifest>
