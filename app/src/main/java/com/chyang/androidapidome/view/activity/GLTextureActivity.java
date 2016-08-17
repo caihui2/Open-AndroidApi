@@ -1,4 +1,4 @@
-package com.chyang.androidapidome.view.activity.canvas_dome;
+package com.chyang.androidapidome.view.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;

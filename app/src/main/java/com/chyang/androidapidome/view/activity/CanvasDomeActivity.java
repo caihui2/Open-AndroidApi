@@ -1,4 +1,4 @@
-package com.chyang.androidapidome.view.activity.canvas_dome;
+package com.chyang.androidapidome.view.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

@@ -7,9 +7,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.chyang.androidapidome.view.activity.canvas_dome.CanvasDomeActivity">
+    tools:context=".view.activity.CanvasDomeActivity">
 
-    <com.chyang.androidapidome.view.ui.canvas_dome.DomeView
+    <com.chyang.androidapidome.view.ui.DomeView
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

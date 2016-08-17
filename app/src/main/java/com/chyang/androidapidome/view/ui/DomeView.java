@@ -1,4 +1,4 @@
-package com.chyang.androidapidome.view.ui.canvas_dome;
+package com.chyang.androidapidome.view.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;

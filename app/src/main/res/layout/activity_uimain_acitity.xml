@@ -16,5 +16,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="textTure实现模糊效果"/>
+    <Button
+        android:id="@+id/bt_materialToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="MaterialTextToolBar"/>
 
 </LinearLayout>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.chyang.androidapidome.view.activity.canvas_dome.GLTextureActivity">
+    tools:context=".view.activity.GLTextureActivity">
 
     <com.lewa.chyang.obscure.GLTextureView
         android:id="@+id/gl_view"

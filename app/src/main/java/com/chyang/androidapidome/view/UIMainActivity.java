@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.chyang.androidapidome.R;
-import com.chyang.androidapidome.view.activity.canvas_dome.CanvasDomeActivity;
-import com.chyang.androidapidome.view.activity.canvas_dome.GLTextureActivity;
+import com.chyang.androidapidome.view.activity.CanvasDomeActivity;
+import com.chyang.androidapidome.view.activity.GLTextureActivity;
+import com.chyang.androidapidome.view.activity.MaterialTextToolbarActivity;
 
 public class UIMainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -17,6 +18,7 @@ public class UIMainActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_uimain_acitity);
         findViewById(R.id.canvas_dome).setOnClickListener(this);
         findViewById(R.id.bt_fuzzy).setOnClickListener(this);
+        findViewById(R.id.bt_materialToolbar).setOnClickListener(this);
     }
 
     @Override
@@ -28,6 +30,9 @@ public class UIMainActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.bt_fuzzy:
                 mIntent = new Intent(this, GLTextureActivity.class);
+                break;
+            case R.id.bt_materialToolbar:
+                mIntent = new Intent(this, MaterialTextToolbarActivity.class);
                 break;
         }
         startActivity(mIntent);
