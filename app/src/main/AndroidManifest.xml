@@ -20,8 +20,11 @@
         <activity android:name=".view.UIMainActivity" />
         <activity android:name=".view.activity.CanvasDomeActivity" />
         <activity android:name=".view.activity.GLTextureActivity" />
-        <activity android:name=".view.activity.MaterialTextToolbarActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+        <activity
+            android:name=".view.activity.MaterialTextToolbarActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".view.activity.XScreenActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" ></activity>
         <!-- UI end -->
         <!-- service start -->
         <activity android:name=".Service.DomeServiceActivity" />

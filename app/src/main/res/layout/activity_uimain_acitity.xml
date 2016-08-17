@@ -22,4 +22,10 @@
         android:layout_height="wrap_content"
         android:text="MaterialTextToolBar"/>
 
+    <Button
+        android:id="@+id/bt_x_screen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="X_Screen"/>
+
 </LinearLayout>
