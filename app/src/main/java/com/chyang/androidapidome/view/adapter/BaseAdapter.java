@@ -3,6 +3,7 @@ package com.chyang.androidapidome.view.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -55,7 +56,7 @@ public class BaseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             Actor p = mActors.get(position -1);
             mBaseViewHolder.mTextView.setText(p.name);
             mBaseViewHolder.ivCover.setImageResource(p.res);
-        }
+        } else if(holder instanceof HeaderViewHolder) {}
     }
 
     @Override
@@ -71,10 +72,12 @@ public class BaseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     class HeaderViewHolder extends RecyclerView.ViewHolder {
 
 //        private EditText ivHeader;
+        private View mView;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
-           // ivHeader = (EditText) itemView.findViewById(R.id.);
+            mView = itemView;
+            itemView.setVisibility(View.INVISIBLE);
         }
     }
 

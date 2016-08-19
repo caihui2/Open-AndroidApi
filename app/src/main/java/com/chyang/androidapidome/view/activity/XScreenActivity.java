@@ -1,13 +1,18 @@
 package com.chyang.androidapidome.view.activity;
 
+import android.graphics.Canvas;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 
@@ -18,14 +23,15 @@ import com.chyang.androidapidome.view.enter.Actor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XScreenActivity extends AppCompatActivity {
+public class XScreenActivity extends AppCompatActivity implements View.OnClickListener{
 
     private RecyclerView mRecyclerView;
     private List<Actor> mActorList;
     private BaseAdapter mBaseAdapter;
     private LinearLayoutManager mLinearLayoutManager;
 
-    private ImageView mSerchView;
+    private ImageButton mSerchView;
+    private ViewGroup mRts;
     private EditText mEditText;
 
     private float headerViewHeight;
@@ -35,7 +41,6 @@ public class XScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_xsreen);
-        ScrollView mScrollView = new ScrollView(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.list);
         mActorList = new ArrayList<Actor>();
         Actor anglababy = new Actor("anglababy", R.mipmap.anglababy);
@@ -61,26 +66,56 @@ public class XScreenActivity extends AppCompatActivity {
         // 设置固定大小
         mRecyclerView.setHasFixedSize(true);
 
-        mSerchView = (ImageView) findViewById(R.id.iv_search);
+        mSerchView = (ImageButton) findViewById(R.id.iv_search);
+        mSerchView.setOnClickListener(this);
         mEditText = (EditText) findViewById(R.id.ed);
         mBaseAdapter = new BaseAdapter(this);
         mBaseAdapter.setActor(mActorList);
         mRecyclerView.setAdapter(mBaseAdapter);
         mRecyclerView.addOnScrollListener(mOnScrollListener);
+        mRecyclerView.scheduleLayoutAnimation();
+        mRts = (ViewGroup)findViewById(R.id.rls);
 
-//        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback() {
-//            @Override
-//            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-//
-//            }
-//        };
+        ItemTouchHelper.Callback mCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                int position = viewHolder.getAdapterPosition();
+
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+
+            @Override
+            public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                System.out.println(viewHolder.getAdapterPosition() +"==========="+dX +"=---------"+dY);
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                System.out.println(viewHolder.getAdapterPosition() +"=====childDraw======"+dX +"=---------"+dY);
+            }
+        };
+
+        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(mCallback);
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         headerViewHeight = getResources().getDimension(R.dimen.x_screen_header_height);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_search:
+                System.out.println("我被点击了");
+                break;
+        }
     }
 
     private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -109,4 +144,5 @@ public class XScreenActivity extends AppCompatActivity {
         float offset = -top + firstVisiblePosition * c.getHeight() + headerHeight;
         return offset;
     }
+
 }
