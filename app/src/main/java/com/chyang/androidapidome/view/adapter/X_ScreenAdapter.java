@@ -1,6 +1,7 @@
 package com.chyang.androidapidome.view.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,21 +19,30 @@ import java.util.List;
 /**
  * Created by chyang on 2016/8/12.
  */
-public class BaseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+public class X_ScreenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     public static final int HEADER_VIEW = 0;
     public static final int BASE_VIEW = 1;
+    private boolean isHide = false;
 
 
     private List<Actor> mActors;
     private Context mContext;
 
-    public BaseAdapter(Context context) {
+    public X_ScreenAdapter(Context context) {
         mContext = context;
     }
 
     public void setActor(List<Actor> actor){
         mActors = actor;
+    }
+
+    public void setIsHide(boolean isHide) {
+        this.isHide = isHide;
+    }
+
+    public boolean isHide() {
+        return isHide;
     }
 
     @Override
@@ -54,8 +64,18 @@ public class BaseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         if(holder instanceof  BaseViewHolder) {
             BaseViewHolder  mBaseViewHolder = (BaseViewHolder) holder;
             Actor p = mActors.get(position -1);
-            mBaseViewHolder.mTextView.setText(p.name);
-            mBaseViewHolder.ivCover.setImageResource(p.res);
+            TextView mTextView = mBaseViewHolder.mTextView;
+            ImageView mImageView = mBaseViewHolder.ivCover;
+            mTextView.setText(p.name);
+            mImageView.setImageResource(p.res);
+            if(isHide) {
+                mImageView.setVisibility(View.GONE);
+                mTextView.setBackgroundColor(Color.BLACK);
+            } else {
+                mImageView.setVisibility(View.VISIBLE);
+                mTextView.setBackgroundColor(Color.TRANSPARENT);
+            }
+
         } else if(holder instanceof HeaderViewHolder) {}
     }
 

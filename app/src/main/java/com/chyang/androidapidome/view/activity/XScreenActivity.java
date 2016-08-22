@@ -1,23 +1,17 @@
 package com.chyang.androidapidome.view.activity;
 
-import android.graphics.Canvas;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ScrollView;
 
 import com.chyang.androidapidome.R;
-import com.chyang.androidapidome.view.adapter.BaseAdapter;
+import com.chyang.androidapidome.view.adapter.X_ScreenAdapter;
 import com.chyang.androidapidome.view.enter.Actor;
 
 import java.util.ArrayList;
@@ -27,7 +21,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
 
     private RecyclerView mRecyclerView;
     private List<Actor> mActorList;
-    private BaseAdapter mBaseAdapter;
+    private X_ScreenAdapter mBaseAdapter;
     private LinearLayoutManager mLinearLayoutManager;
 
     private ImageButton mSerchView;
@@ -69,14 +63,16 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         mSerchView = (ImageButton) findViewById(R.id.iv_search);
         mSerchView.setOnClickListener(this);
         mEditText = (EditText) findViewById(R.id.ed);
-        mBaseAdapter = new BaseAdapter(this);
+        mBaseAdapter = new X_ScreenAdapter(this);
         mBaseAdapter.setActor(mActorList);
         mRecyclerView.setAdapter(mBaseAdapter);
         mRecyclerView.addOnScrollListener(mOnScrollListener);
         mRecyclerView.scheduleLayoutAnimation();
         mRts = (ViewGroup)findViewById(R.id.rls);
+        headerViewHeight = getResources().getDimension(R.dimen.x_screen_header_height);
 
-        ItemTouchHelper.Callback mCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+        //TODO Temporarily not never ItemTouchHelper
+      /*  ItemTouchHelper.Callback mCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -104,16 +100,23 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         };
 
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(mCallback);
-        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView); */
 
-        headerViewHeight = getResources().getDimension(R.dimen.x_screen_header_height);
+
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_search:
-                System.out.println("我被点击了");
+                if(!mBaseAdapter.isHide()) {
+                    mBaseAdapter.setIsHide(true);
+                    mBaseAdapter.notifyItemRangeChanged(1,mBaseAdapter.getItemCount());
+                } else{
+                    mBaseAdapter.setIsHide(false);
+                    mBaseAdapter.notifyItemRangeChanged(1,mBaseAdapter.getItemCount());
+                }
                 break;
         }
     }
