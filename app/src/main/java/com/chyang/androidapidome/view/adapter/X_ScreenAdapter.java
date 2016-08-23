@@ -1,12 +1,18 @@
 package com.chyang.androidapidome.view.adapter;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.ScaleAnimation;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +30,15 @@ public class X_ScreenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final int HEADER_VIEW = 0;
     public static final int BASE_VIEW = 1;
     private boolean isHide = false;
+    private boolean isPlayAnimation = false;
+    private int selectPosition = -1;
+
+    public OnItemClickListener itemClickListener;
+
+
+    public interface OnItemClickListener{
+         public void onItemClick(int position , RecyclerView.ViewHolder mViewHolder);
+    }
 
 
     private List<Actor> mActors;
@@ -43,6 +58,10 @@ public class X_ScreenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public boolean isHide() {
         return isHide;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 
     @Override
@@ -68,16 +87,46 @@ public class X_ScreenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ImageView mImageView = mBaseViewHolder.ivCover;
             mTextView.setText(p.name);
             mImageView.setImageResource(p.res);
+            float translationX = (float) ((mBaseViewHolder.itemView.getWidth() - mBaseViewHolder.itemView.getWidth() * 0.5f) /2);
+           // mBaseViewHolder.itemView.setTranslationX(-262.5f);
             if(isHide) {
+                if(position != selectPosition) {
+                    mBaseViewHolder.itemView.setTranslationX(-262.5f);
+                    ViewCompat.setAlpha(mBaseViewHolder.itemView, 0.5f);
+                    ViewCompat.setScaleX(mBaseViewHolder.itemView, 0.5f);
+                } else{
+                    ViewCompat.setAlpha(mBaseViewHolder.itemView, 1.0f);
+                    ViewCompat.setScaleX(mBaseViewHolder.itemView, 1.0f);
+                    mBaseViewHolder.itemView.setTranslationX(0.0f);
+                }
                 mImageView.setVisibility(View.GONE);
                 mTextView.setBackgroundColor(Color.BLACK);
-            } else {
+
+            }  else {
+                ViewCompat.setAlpha(mBaseViewHolder.itemView, 1.0f);
+                ViewCompat.setScaleX(mBaseViewHolder.itemView, 1.0f);
+                mBaseViewHolder.itemView.setTranslationX(0.0f);
                 mImageView.setVisibility(View.VISIBLE);
                 mTextView.setBackgroundColor(Color.TRANSPARENT);
+
             }
 
         } else if(holder instanceof HeaderViewHolder) {}
     }
+//
+//    public void propertyValuesHolder(View view, boolean isReset) {
+//   if(!isReset) {
+////       ObjectAnimator.ofFloat(view,"scaleX", 1f,
+////               0.5f).setDuration(1000).start();
+//    ValueAnimator mValueAnimator=   ValueAnimator.ofInt(view.getWidth(), view.getWidth() / 2);
+//       mValueAnimator.setTarget(view);
+//       mValueAnimator.start();
+//   } else {
+//       ObjectAnimator.ofFloat(view,"scaleX", 0.5f,
+//               1.0f).setDuration(1000).start();
+//   }
+//
+//    }
 
     @Override
     public int getItemViewType(int position) {
@@ -101,14 +150,28 @@ public class X_ScreenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    class BaseViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView;
+
+
+    class BaseViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+        public Button mTextView;
         public ImageView ivCover;
 
         public BaseViewHolder( View v ) {
             super(v);
-            mTextView = (TextView) v.findViewById(R.id.name);
+            mTextView = (Button) v.findViewById(R.id.name);
             ivCover = (ImageView) v.findViewById(R.id.pic);
+            mTextView.setOnLongClickListener(this);
+        }
+
+
+        @Override
+        public boolean onLongClick(View v) {
+            System.out.println("laile");
+            selectPosition = getAdapterPosition();
+            if(itemClickListener != null) {
+                itemClickListener.onItemClick(getAdapterPosition(), this);
+            }
+            return false;
         }
     }
 }
