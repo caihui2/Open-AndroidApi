@@ -10,12 +10,6 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-
-//        ndk {
-//            moduleName = "jniTest"
-//            ldLibs "log","z","m"
-//            abiFilters "armeabi", "armeabi-v7a","x86"
-//        }
     }
     buildTypes {
         release {
@@ -31,11 +25,12 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.0.0'
-    compile 'com.android.support:cardview-v7:23.+'
+
     compile 'com.android.support:design:23.+'
-    compile project(':openCVLibrary310')
-    compile project(':obscure')
+    compile project(':UI_GLGaussian')
+    compile project(':UI_materialtexttoolbar')
+    compile project(':UI_mycanvasdome')
+    compile project(':UI_X_Screen')
 
 
 }

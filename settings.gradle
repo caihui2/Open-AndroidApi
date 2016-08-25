@@ -1,2 +1,1 @@
-include ':app', ':obscure'
-include ':openCVLibrary310'
+include ':app', ':UI_GLGaussian', ':UI_materialtexttoolbar', ':UI_mycanvasdome', ':UI_X_Screen'

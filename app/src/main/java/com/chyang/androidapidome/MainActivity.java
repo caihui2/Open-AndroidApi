@@ -6,12 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.chyang.androidapidome.Service.DomeServiceActivity;
-import com.chyang.androidapidome.jni.DomeJniActivity;
-import com.chyang.androidapidome.opencv.OpenCvDomeActivity;
 import com.chyang.androidapidome.view.UIMainActivity;
 
-import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.OpenCVLoader;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -37,10 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mIntent = new Intent(this, DomeServiceActivity.class);
                 break;
             case R.id.bt_jni:
-                mIntent = new Intent(this, DomeJniActivity.class);
                 break;
             case R.id.opencv:
-                mIntent = new Intent(this, OpenCvDomeActivity.class);
                 break;
         }
 

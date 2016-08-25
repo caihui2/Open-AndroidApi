@@ -18,11 +18,9 @@
 
         <!-- UI start -->
         <activity android:name=".view.UIMainActivity" />
-        <activity android:name=".view.activity.CanvasDomeActivity" />
-        <activity android:name=".view.activity.GLTextureActivity" />
-        <activity
-            android:name=".view.activity.MaterialTextToolbarActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+
+
         <activity android:name=".view.activity.XScreenActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" ></activity>
         <!-- UI end -->
@@ -36,11 +34,6 @@
         </service>
         <!-- service end -->
 
-
-        <!-- jni start -->
-        <activity android:name=".jni.DomeJniActivity" />
-        <!-- jni end -->
-        <activity android:name=".opencv.OpenCvDomeActivity" />
 
     </application>
 

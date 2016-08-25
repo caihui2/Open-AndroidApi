@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.chyang.androidapidome.R;
-import com.chyang.androidapidome.view.activity.CanvasDomeActivity;
-import com.chyang.androidapidome.view.activity.GLTextureActivity;
-import com.chyang.androidapidome.view.activity.MaterialTextToolbarActivity;
-import com.chyang.androidapidome.view.activity.XScreenActivity;
+import com.chyang.materialtexttoolbar.Activity.MaterialTextToolbarActivity;
+import com.chyang.ui_mycanvasdome.activity.CanvasDomeActivity;
+import com.chyang.ui_x_screen.Activity.XScreenActivity;
+import com.lewa.chyang.obscure.Activity.GLTextureActivity;
 
 public class UIMainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -28,7 +28,7 @@ public class UIMainActivity extends AppCompatActivity implements View.OnClickLis
         Intent mIntent = null;
         switch (v.getId()) {
             case R.id.canvas_dome:
-                mIntent = new Intent(this  ,CanvasDomeActivity.class);
+               mIntent = new Intent(this  , CanvasDomeActivity.class);
                 break;
             case R.id.bt_fuzzy:
                 mIntent = new Intent(this, GLTextureActivity.class);
