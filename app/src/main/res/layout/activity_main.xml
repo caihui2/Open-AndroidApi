@@ -4,27 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.chyang.androidapidome.MainActivity">
+    tools:context=".activity.MainActivity">
 
     <Button
         android:id="@+id/bt_ui"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="UI relevant"/>
+        android:text="UI"/>
     <Button
         android:id="@+id/bt_service"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="service_dome"/>
-    <Button
-        android:id="@+id/bt_jni"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="jni_dome"/>
-    <Button
-        android:id="@+id/opencv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="opencv"/>
-
+        android:text="service"/>
 </LinearLayout>

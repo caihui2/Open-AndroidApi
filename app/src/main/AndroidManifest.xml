@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,21 +17,11 @@
         </activity>
 
         <!-- UI start -->
-        <activity android:name=".view.UIMainActivity" />
+        <activity android:name=".activity.UIMainActivity" />
 
 
 
-        <activity android:name=".view.activity.XScreenActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" ></activity>
-        <!-- UI end -->
-        <!-- service start -->
-        <activity android:name=".Service.DomeServiceActivity" />
 
-        <service android:name=".Service.DomeService">
-            <intent-filter>
-                <action android:name="com.chyang.service" />
-            </intent-filter>
-        </service>
         <!-- service end -->
 
 

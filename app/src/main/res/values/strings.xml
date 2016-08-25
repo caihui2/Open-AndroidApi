@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">AndroidApiDome</string>
     <string name="toolbar_title">Toolbar Title</string>
-    <string name="action_settings">Settings</string>
 </resources>

@@ -3,29 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activity.UIMainActivity">
+    android:orientation="vertical">
 
     <Button
-        android:id="@+id/canvas_dome"
+        android:id="@+id/start_service"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="自定义view"/>
+        android:text="开始服务"/>
     <Button
-        android:id="@+id/bt_fuzzy"
+        android:id="@+id/stop_service"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="高斯模糊"/>
+        android:text="停止服务"/>
     <Button
-        android:id="@+id/bt_materialToolbar"
+        android:id="@+id/binder_service"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="MaterialTextToolBar"/>
+        android:text="绑定服务"/>
 
     <Button
-        android:id="@+id/bt_x_screen"
+        android:id="@+id/call_service"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="X_Screen"/>
+        android:text="(绑定)调用方法"/>
 
 </LinearLayout>

@@ -1,17 +1,16 @@
-package com.chyang.androidapidome.Service;
+package com.chyang.sv_myservicedome.Service;
 
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 
 import com.chyang.androidapidome.IMyAidlInterface;
-import com.chyang.androidapidome.R;
+import com.chyang.sv_myservicedome.R;
 
 public class DomeServiceActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,27 +29,27 @@ public class DomeServiceActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         Intent mIntent = new Intent();
-        switch (v.getId()) {
-            case R.id.start_service:
-                mIntent.setClass(this, DomeService.class);
-                startService(mIntent);
-                break;
-            case R.id.stop_service:
-                mIntent.setClass(this, DomeService.class);
-                stopService(mIntent);
-                break;
-            case R.id.binder_service:
-                mIntent.setAction("com.chyang.service").setPackage("com.chyang.androidapidome");
-                bindService(mIntent, new Binder(), BIND_AUTO_CREATE);
-                break;
-            case R.id.call_service:
-                try {
-                    mServices.tosts();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+        int i = v.getId();
+        if (i == R.id.start_service) {
+            mIntent.setClass(this, DomeService.class);
+            startService(mIntent);
 
-                }
-                break;
+        } else if (i == R.id.stop_service) {
+            mIntent.setClass(this, DomeService.class);
+            stopService(mIntent);
+
+        } else if (i == R.id.binder_service) {
+            mIntent.setAction("com.chyang.service").setPackage("com.chyang.androidapidome");
+            bindService(mIntent, new Binder(), BIND_AUTO_CREATE);
+
+        } else if (i == R.id.call_service) {
+            try {
+                mServices.tosts();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+
+            }
+
         }
     }
 

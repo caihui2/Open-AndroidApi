@@ -1,12 +1,12 @@
-package com.chyang.androidapidome;
+package com.chyang.androidapidome.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.chyang.androidapidome.Service.DomeServiceActivity;
-import com.chyang.androidapidome.view.UIMainActivity;
+import com.chyang.androidapidome.R;
+import com.chyang.sv_myservicedome.Service.DomeServiceActivity;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -18,8 +18,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         findViewById(R.id.bt_ui).setOnClickListener(this);
         findViewById(R.id.bt_service).setOnClickListener(this);
-        findViewById(R.id.bt_jni).setOnClickListener(this);
-        findViewById(R.id.opencv).setOnClickListener(this);
     }
 
     @Override
@@ -31,10 +29,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.bt_service:
                 mIntent = new Intent(this, DomeServiceActivity.class);
-                break;
-            case R.id.bt_jni:
-                break;
-            case R.id.opencv:
                 break;
         }
 

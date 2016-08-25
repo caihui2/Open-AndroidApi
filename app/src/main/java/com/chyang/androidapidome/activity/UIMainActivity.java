@@ -1,4 +1,4 @@
-package com.chyang.androidapidome.view;
+package com.chyang.androidapidome.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +28,7 @@ public class UIMainActivity extends AppCompatActivity implements View.OnClickLis
         Intent mIntent = null;
         switch (v.getId()) {
             case R.id.canvas_dome:
-               mIntent = new Intent(this  , CanvasDomeActivity.class);
+                mIntent = new Intent(this,CanvasDomeActivity.class);
                 break;
             case R.id.bt_fuzzy:
                 mIntent = new Intent(this, GLTextureActivity.class);
