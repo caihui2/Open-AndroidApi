@@ -6,7 +6,8 @@
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true">
-        <activity android:name=".Activity.AnimationMainActivity"></activity>
+        <activity android:name=".Activity.AnimationMainActivity" />
+        <activity android:name=".Activity.PropertyAnimationActivity"></activity>
     </application>
 
 </manifest>
