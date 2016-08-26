@@ -14,6 +14,7 @@ public class AnimationMainActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_animation_main);
         findViewById(R.id.bt_property).setOnClickListener(this);
+        findViewById(R.id.bt_property2).setOnClickListener(this);
     }
 
     @Override
@@ -22,6 +23,8 @@ public class AnimationMainActivity extends AppCompatActivity implements View.OnC
         Intent mIntent = new Intent();
         if (i == R.id.bt_property) {
             mIntent.setClass(this, PropertyAnimationActivity.class);
+        } else if(i == R.id.bt_property2) {
+            mIntent.setClass(this, PropertyAnimationActivity2.class);
         }
         startActivity(mIntent);
     }

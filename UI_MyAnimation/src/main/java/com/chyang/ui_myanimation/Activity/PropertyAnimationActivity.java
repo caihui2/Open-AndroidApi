@@ -103,7 +103,7 @@ public class PropertyAnimationActivity extends AppCompatActivity implements View
 
             @Override
             public void onAnimationRepeat(Animator animation) { //动画重复执行的时候调用
-                
+
             }
         });
         animatorSet.play(alpha).with(rotation).with(translationX).with(translationY).with(scaleX).with(scaleY);

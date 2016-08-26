@@ -7,7 +7,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
         <activity android:name=".Activity.AnimationMainActivity" />
-        <activity android:name=".Activity.PropertyAnimationActivity"></activity>
+        <activity android:name=".Activity.PropertyAnimationActivity" />
+        <activity android:name=".Activity.PropertyAnimationActivity2"></activity>
     </application>
 
 </manifest>
