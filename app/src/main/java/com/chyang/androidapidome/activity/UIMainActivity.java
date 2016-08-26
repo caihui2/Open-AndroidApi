@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.chyang.androidapidome.R;
 import com.chyang.materialtexttoolbar.Activity.MaterialTextToolbarActivity;
+import com.chyang.ui_myanimation.Activity.AnimationMainActivity;
 import com.chyang.ui_mycanvasdome.activity.CanvasDomeActivity;
 import com.chyang.ui_x_screen.Activity.XScreenActivity;
 import com.lewa.chyang.obscure.Activity.GLTextureActivity;
@@ -21,6 +22,7 @@ public class UIMainActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.bt_fuzzy).setOnClickListener(this);
         findViewById(R.id.bt_materialToolbar).setOnClickListener(this);
         findViewById(R.id.bt_x_screen).setOnClickListener(this);
+        findViewById(R.id.bt_my_animation).setOnClickListener(this);
     }
 
     @Override
@@ -38,6 +40,9 @@ public class UIMainActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.bt_x_screen:
                 mIntent = new Intent(this, XScreenActivity.class);
+                break;
+            case R.id.bt_my_animation:
+                mIntent = new Intent(this, AnimationMainActivity.class);
                 break;
         }
         startActivity(mIntent);

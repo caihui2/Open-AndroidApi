@@ -1,1 +1,1 @@
-include ':app', ':UI_GLGaussian', ':UI_materialtexttoolbar', ':UI_mycanvasdome', ':UI_X_Screen', ':SV_Myservicedome'
+include ':app', ':UI_GLGaussian', ':UI_materialtexttoolbar', ':UI_mycanvasdome', ':UI_X_Screen', ':SV_Myservicedome', ':UI_MyAnimation'

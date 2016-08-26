@@ -28,4 +28,10 @@
         android:layout_height="wrap_content"
         android:text="X_Screen"/>
 
+    <Button
+        android:id="@+id/bt_my_animation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="动画"/>
+
 </LinearLayout>

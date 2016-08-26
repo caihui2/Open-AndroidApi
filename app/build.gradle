@@ -32,6 +32,7 @@ dependencies {
     compile project(':UI_mycanvasdome')
     compile project(':UI_X_Screen')
     compile project(':SV_Myservicedome')
+    compile project(':UI_MyAnimation')
 
 
 }
