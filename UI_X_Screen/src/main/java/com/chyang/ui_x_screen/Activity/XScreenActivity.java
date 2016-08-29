@@ -44,7 +44,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
     private float headerViewHeight;
     private boolean isChange = false;
 
-    private RelativeLayout mainViewGroup;
+    private RelativeLayout rtMainGtoup;
     private RelativeLayout serchViewGroup;
     private RelativeLayout rtInputViewGroup;
     private boolean isAnima = true;
@@ -90,7 +90,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         mRts = (ViewGroup)findViewById(R.id.rls);
         headerViewHeight = getResources().getDimension(R.dimen.x_screen_header_height);
         mRecyclerView.setOnScrollHeaderOffsetListener(mOnScrollHeaderOffsetListener);
-        mainViewGroup = (RelativeLayout)findViewById(R.id.main);
+        rtMainGtoup = (RelativeLayout)findViewById(R.id.rl_main_group);
          serchViewGroup = (RelativeLayout) findViewById(R.id.rls);
         rtInputViewGroup = (RelativeLayout)findViewById(R.id.rt_input);
 
@@ -98,21 +98,20 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         int windowHeight = windowManager.getDefaultDisplay().getHeight();
        // startDropAnimator(windowHeight -9);
 
-        mainViewGroup.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        rtMainGtoup.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
 
                 Rect r = new Rect();
-                mainViewGroup.getWindowVisibleDisplayFrame(r);
+                rtMainGtoup.getWindowVisibleDisplayFrame(r);
 
-                int screenHeight = mainViewGroup.getRootView().getHeight();
+                int screenHeight = rtMainGtoup.getRootView().getHeight();
                 int heightDifference = screenHeight - (r.bottom - r.top);
                 System.out.println("Keyboard Size, Size: " + heightDifference);
                 if(heightDifference > 200) {
                   float height =  getResources().getDimension(R.dimen.actionbar_height);
                     int moveHeight = (int) (r.bottom - height * 2 ) - r.top;
-                    System.out.println(moveHeight+"=====keybrotSize:"+(r.bottom) +"===== mainScreen"+screenHeight
-                    );
+                    System.out.println(moveHeight+"=====keybrotSize:"+(r.bottom) +"===== mainScreen"+screenHeight);
                     startDropAnimator(moveHeight);
                 }
                 //boolean visible = heightDiff > screenHeight / 3;

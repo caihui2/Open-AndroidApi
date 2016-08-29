@@ -36,12 +36,13 @@
         android:src="@mipmap/btn_search" />
 
     <com.chyang.ui_x_screen.ui.DropDownLayout
+        android:id="@+id/rl_content_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_title_group">
 
         <LinearLayout
-            android:id="@+id/rev_ll"
+            android:id="@+id/ll_lists_group"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
