@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_main_group"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/cover_background">
 
     <RelativeLayout
-        android:id="@+id/rlt"
+        android:id="@+id/rl_title_group"
         android:layout_width="match_parent"
         android:layout_height="@dimen/actionbar_height"
         android:orientation="horizontal">
@@ -15,53 +15,71 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:src="@mipmap/btn_music_setting"/>
+            android:src="@mipmap/btn_music_setting" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="Hello there , my master"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:text="Hello there , my master" />
     </RelativeLayout>
 
-    <com.chyang.ui_x_screen.ui.LovelyRecyclerView
-        android:id="@+id/list"
-        android:layout_below="@id/rlt"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false"
-        android:focusable="false">
-
-    </com.chyang.ui_x_screen.ui.LovelyRecyclerView>>
 
     <ImageButton
         android:id="@+id/iv_search"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:background="@android:color/transparent"
         android:src="@mipmap/btn_search" />
 
-
-    <RelativeLayout
-        android:id="@+id/rls"
-        android:layout_below="@+id/rlt"
+    <com.chyang.ui_x_screen.ui.DropDownLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp">
-        <EditText
-            android:id="@+id/ed"
-            android:layout_width="250dp"
-            android:layout_height="30dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@android:color/white"
-            />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_title_group">
 
+        <LinearLayout
+            android:id="@+id/rev_ll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <com.chyang.ui_x_screen.ui.LovelyRecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:focusable="false"/>
+        </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/rls"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:id="@+id/rt_input"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/actionbar_height"
+                android:background="@android:color/holo_red_dark">
 
+            <EditText
+                android:id="@+id/ed"
+                android:layout_width="250dp"
+                android:layout_height="30dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/white" />
 
-
+            <ImageButton
+                android:id="@+id/iv_search_in"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:src="@mipmap/btn_search" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </com.chyang.ui_x_screen.ui.DropDownLayout>
 </RelativeLayout>

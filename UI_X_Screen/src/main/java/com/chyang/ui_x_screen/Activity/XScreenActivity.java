@@ -1,6 +1,10 @@
 package com.chyang.ui_x_screen.Activity;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
+import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -10,8 +14,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import com.chyang.ui_x_screen.R;
 import com.chyang.ui_x_screen.adapter.X_ScreenAdapter;
@@ -30,11 +37,17 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
     private LinearLayoutManager mLinearLayoutManager;
 
     private ImageButton mSerchView;
+    private ImageButton mSerchViewIn;
     private ViewGroup mRts;
     private EditText mEditText;
 
     private float headerViewHeight;
     private boolean isChange = false;
+
+    private RelativeLayout mainViewGroup;
+    private RelativeLayout serchViewGroup;
+    private RelativeLayout rtInputViewGroup;
+    private boolean isAnima = true;
 
 
     @Override
@@ -50,11 +63,6 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         Actor tangyan = new Actor("唐嫣", R.mipmap.tangyan);
         Actor yangmi = new Actor("杨幂", R.mipmap.yangmi);
         Actor zhaoliyin = new Actor("赵丽颖", R.mipmap.zhaoliyin);
-//        mActorList.add(anglababy);
-//        mActorList.add(anglababy);
-//        mActorList.add(anglababy);
-//        mActorList.add(anglababy);
-//        mActorList.add(anglababy);
         mActorList.add(anglababy);
         mActorList.add(fanbingbing);
         mActorList.add(limengyin);
@@ -72,6 +80,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         mRecyclerView.setHasFixedSize(true);
 
         mSerchView = (ImageButton) findViewById(R.id.iv_search);
+        mSerchViewIn = (ImageButton) findViewById(R.id.iv_search_in);
         mSerchView.setOnClickListener(this);
         mEditText = (EditText) findViewById(R.id.ed);
         mBaseAdapter = new X_ScreenAdapter(this);
@@ -81,6 +90,38 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         mRts = (ViewGroup)findViewById(R.id.rls);
         headerViewHeight = getResources().getDimension(R.dimen.x_screen_header_height);
         mRecyclerView.setOnScrollHeaderOffsetListener(mOnScrollHeaderOffsetListener);
+        mainViewGroup = (RelativeLayout)findViewById(R.id.main);
+         serchViewGroup = (RelativeLayout) findViewById(R.id.rls);
+        rtInputViewGroup = (RelativeLayout)findViewById(R.id.rt_input);
+
+        WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        int windowHeight = windowManager.getDefaultDisplay().getHeight();
+       // startDropAnimator(windowHeight -9);
+
+        mainViewGroup.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                Rect r = new Rect();
+                mainViewGroup.getWindowVisibleDisplayFrame(r);
+
+                int screenHeight = mainViewGroup.getRootView().getHeight();
+                int heightDifference = screenHeight - (r.bottom - r.top);
+                System.out.println("Keyboard Size, Size: " + heightDifference);
+                if(heightDifference > 200) {
+                  float height =  getResources().getDimension(R.dimen.actionbar_height);
+                    int moveHeight = (int) (r.bottom - height * 2 ) - r.top;
+                    System.out.println(moveHeight+"=====keybrotSize:"+(r.bottom) +"===== mainScreen"+screenHeight
+                    );
+                    startDropAnimator(moveHeight);
+                }
+                //boolean visible = heightDiff > screenHeight / 3;
+            }
+        });
+
+
+
+
 
 
         //TODO Temporarily not never ItemTouchHelper
@@ -152,6 +193,48 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    private void startDropAnimator(int height) {
+        ValueAnimator mValueAnimator = ValueAnimator.ofInt(0, height);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+             int value = (int) animation.getAnimatedValue();
+           //     System.out.println(value+"==-=-=-=-=");
+                rtInputViewGroup.setTranslationY(value);
+
+            }
+        });
+        mValueAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isAnima =false;
+                rtInputViewGroup.setTranslationY(0);
+                RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                mLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                rtInputViewGroup.setLayoutParams(mLayoutParams);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        if(isAnima) {
+            mValueAnimator.setDuration(1000);
+            mValueAnimator.start();
+        }
+    }
+
 
     private LovelyRecyclerView.OnScrollHeaderOffsetListener mOnScrollHeaderOffsetListener = new LovelyRecyclerView.OnScrollHeaderOffsetListener() {
         @Override
@@ -162,23 +245,19 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onHeaderScrollOffset(float offset) {
             mEditText.setAlpha(offset);
+            if(offset == 1) {
+                mSerchView.setVisibility(View.GONE);
+                mSerchViewIn.setVisibility(View.VISIBLE);
+            } else {
+                mSerchViewIn.setVisibility(View.GONE);
+                mSerchView.setVisibility(View.VISIBLE);
+            }
             mSerchView.setTranslationY(mSerchView.getHeight()  * offset);
         }
     };
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-//            case R.id.iv_search:
-//                if(!mBaseAdapter.isHide()) {
-//                    mBaseAdapter.setIsHide(true);
-//                    mBaseAdapter.notifyDataSetChanged();
-//                } else{
-//                    mBaseAdapter.setIsHide(false);
-//                    mBaseAdapter.notifyDataSetChanged();
-//                }
- //               break;
-        }
     }
 
 }

@@ -6,7 +6,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
    <activity android:name=".Activity.XScreenActivity"
-       android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+       android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+       android:windowSoftInputMode="adjustResize"  ></activity>
     </application>
 
 </manifest>
