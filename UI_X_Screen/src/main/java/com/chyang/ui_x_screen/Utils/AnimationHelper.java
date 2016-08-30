@@ -6,7 +6,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 /**
  * Created by chyang on 2016/8/29.
  */
-public class PickUpAnimationHelper  {
+public class AnimationHelper {
 
     private RecyclerView.Adapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -15,7 +15,7 @@ public class PickUpAnimationHelper  {
     private ItemTouchHelper mItemTouchHelper;
     private boolean isChange = false;
 
-    public  PickUpAnimationHelper(RecyclerView recyclerView ,RecyclerView.Adapter adapter) {
+    public AnimationHelper(RecyclerView recyclerView , RecyclerView.Adapter adapter) {
         mAdapter = adapter;
         mRecyclerView = recyclerView;
 

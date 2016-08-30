@@ -9,7 +9,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.LinearInterpolator;
 
+import com.chyang.ui_myanimation.Tools.DecelerateAccelerateInterpoltor;
 import com.chyang.ui_myanimation.Tools.PointEvaluator;
 import com.chyang.ui_myanimation.enter.ColorEvaluator;
 import com.chyang.ui_myanimation.enter.Point;
@@ -70,8 +74,12 @@ public class MyAnimView extends View {
 
 
     private void startAnimator() {
-        Point startPoint = new Point(RADUIS, RADUIS);
-        Point endPoint = new Point(getWidth() - RADUIS, getHeight() - RADUIS);
+//        Point startPoint = new Point(RADUIS, RADUIS);
+//        Point endPoint = new Point(getWidth() - RADUIS, getHeight() - RADUIS);
+
+        Point startPoint = new Point(getWidth() / 2, RADUIS);
+        Point endPoint = new Point(getWidth() / 2, getHeight() - RADUIS);
+
 
         ValueAnimator anim = ValueAnimator.ofObject(new PointEvaluator(), startPoint, endPoint);
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -85,6 +93,7 @@ public class MyAnimView extends View {
         AnimatorSet animSet = new AnimatorSet();
         animSet.play(anim).with(anim2);
         animSet.setDuration(5000);
+        animSet.setInterpolator(new DecelerateAccelerateInterpoltor());
         animSet.start();
     }
 }

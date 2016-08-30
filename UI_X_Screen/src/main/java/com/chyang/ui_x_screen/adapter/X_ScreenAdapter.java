@@ -145,7 +145,6 @@ public class X_ScreenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         @Override
         public boolean onLongClick(View v) {
-            System.out.println("laile");
             selectPosition = getAdapterPosition();
             if(itemClickListener != null) {
                 itemClickListener.onItemClick(getAdapterPosition(), this);

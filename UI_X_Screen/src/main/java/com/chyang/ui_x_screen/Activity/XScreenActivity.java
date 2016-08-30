@@ -1,26 +1,25 @@
 package com.chyang.ui_x_screen.Activity;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.chyang.ui_x_screen.R;
+import com.chyang.ui_x_screen.Utils.AnimationHelper;
 import com.chyang.ui_x_screen.adapter.X_ScreenAdapter;
 import com.chyang.ui_x_screen.enter.Actor;
 import com.chyang.ui_x_screen.ui.LovelyRecyclerView;
@@ -28,7 +27,7 @@ import com.chyang.ui_x_screen.ui.LovelyRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XScreenActivity extends AppCompatActivity implements View.OnClickListener{
+public class XScreenActivity extends AppCompatActivity implements View.OnClickListener, ViewTreeObserver.OnGlobalLayoutListener{
 
     private static final String TAG = "XScreenActivity";
     private LovelyRecyclerView mRecyclerView;
@@ -36,18 +35,28 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
     private X_ScreenAdapter mBaseAdapter;
     private LinearLayoutManager mLinearLayoutManager;
 
+    private AnimationHelper pickUpAnimationHelper;
+
     private ImageButton mSerchView;
     private ImageButton mSerchViewIn;
-    private ViewGroup mRts;
+    private ImageButton ivDrop;
     private EditText mEditText;
 
-    private float headerViewHeight;
-    private boolean isChange = false;
-
-    private RelativeLayout rtMainGtoup;
-    private RelativeLayout serchViewGroup;
+    private RelativeLayout rtMainGroup;
     private RelativeLayout rtInputViewGroup;
-    private boolean isAnima = true;
+    private LinearLayout llListsGroup;
+    private LinearLayout llSearChontentGroup;
+
+
+    private boolean isDropAnimator = true;
+    private boolean isUpAnimator = false;
+    private int upHeight = -1;
+    private int dropHeight = -1;
+
+
+    private ValueAnimator mDropAnimator;
+    private ValueAnimator mUpAnimator;
+
 
 
     @Override
@@ -70,169 +79,148 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         mActorList.add(tangyan);
         mActorList.add(yangmi);
         mActorList.add(zhaoliyin);
-
-        // 设置LinearLayoutManager
         mLinearLayoutManager =  new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        // 设置ItemAnimator
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        // 设置固定大小
         mRecyclerView.setHasFixedSize(true);
+        mBaseAdapter = new X_ScreenAdapter(this);
+        mBaseAdapter.setActor(mActorList);
+        mRecyclerView.setAdapter(mBaseAdapter);
+        mRecyclerView.scheduleLayoutAnimation();
+        mRecyclerView.setOnScrollHeaderOffsetListener(mOnScrollHeaderOffsetListener);
+
+
 
         mSerchView = (ImageButton) findViewById(R.id.iv_search);
         mSerchViewIn = (ImageButton) findViewById(R.id.iv_search_in);
         mSerchView.setOnClickListener(this);
         mEditText = (EditText) findViewById(R.id.ed);
-        mBaseAdapter = new X_ScreenAdapter(this);
-        mBaseAdapter.setActor(mActorList);
-        mRecyclerView.setAdapter(mBaseAdapter);
-        mRecyclerView.scheduleLayoutAnimation();
-        mRts = (ViewGroup)findViewById(R.id.rls);
-        headerViewHeight = getResources().getDimension(R.dimen.x_screen_header_height);
-        mRecyclerView.setOnScrollHeaderOffsetListener(mOnScrollHeaderOffsetListener);
-        rtMainGtoup = (RelativeLayout)findViewById(R.id.rl_main_group);
-         serchViewGroup = (RelativeLayout) findViewById(R.id.rls);
+        ivDrop = (ImageButton) findViewById(R.id.iv_drop);
+        ivDrop.setOnClickListener(this);
+        ivDrop.setAlpha(0.0f);
+        ivDrop.setVisibility(View.GONE);
+
+        rtMainGroup = (RelativeLayout)findViewById(R.id.rl_main_group);
         rtInputViewGroup = (RelativeLayout)findViewById(R.id.rt_input);
-
-        WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        int windowHeight = windowManager.getDefaultDisplay().getHeight();
-       // startDropAnimator(windowHeight -9);
-
-        rtMainGtoup.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-
-                Rect r = new Rect();
-                rtMainGtoup.getWindowVisibleDisplayFrame(r);
-
-                int screenHeight = rtMainGtoup.getRootView().getHeight();
-                int heightDifference = screenHeight - (r.bottom - r.top);
-                System.out.println("Keyboard Size, Size: " + heightDifference);
-                if(heightDifference > 200) {
-                  float height =  getResources().getDimension(R.dimen.actionbar_height);
-                    int moveHeight = (int) (r.bottom - height * 2 ) - r.top;
-                    System.out.println(moveHeight+"=====keybrotSize:"+(r.bottom) +"===== mainScreen"+screenHeight);
-                    startDropAnimator(moveHeight);
-                }
-                //boolean visible = heightDiff > screenHeight / 3;
-            }
-        });
-
-
-
-
-
-
-        //TODO Temporarily not never ItemTouchHelper
-       final ItemTouchHelper.Callback mCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP, -1) {
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                int position = viewHolder.getAdapterPosition();
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-            }
-
-           @Override
-           public boolean isLongPressDragEnabled() {
-               return false;
-           }
-
-           @Override
-           public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-               super.onSelectedChanged(viewHolder, actionState);
-           }
-
-           @Override
-           public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-               super.clearView(recyclerView, viewHolder);
-           }
-
-           @Override
-            public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-             //   System.out.println(viewHolder.getAdapterPosition() +"==========="+dX +"=---------"+dY);
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            //    System.out.println(viewHolder.getAdapterPosition() +"=====childDraw======"+dX +"=---------"+dY);
-            }
-        };
-
-        final ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(mCallback);
-        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
-
-
-        mBaseAdapter.setOnItemClickListener(new X_ScreenAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, RecyclerView.ViewHolder mViewHolder) {
-                if(!mBaseAdapter.isHide()) {
-
-                    mBaseAdapter.setIsHide(true);
-                    mBaseAdapter.notifyItemRangeChanged(1, mBaseAdapter.getItemCount());
-                    mRecyclerView.requestLayout();
-                    mItemTouchHelper.startDrag(mViewHolder);
-
-                } else{
-                    mBaseAdapter.setIsHide(false);
-                    mRecyclerView.requestLayout();
-                    mBaseAdapter.notifyItemRangeChanged(1, mBaseAdapter.getItemCount());
-
-                }
-            }
-        });
-
+        llListsGroup = (LinearLayout)findViewById(R.id.ll_lists_group);
+        pickUpAnimationHelper = new AnimationHelper(mRecyclerView, mBaseAdapter);
+        llSearChontentGroup = (LinearLayout)findViewById(R.id.ll_search_content_group);
+        llSearChontentGroup.setAlpha(0.0f);
+        rtMainGroup.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
 
     }
 
-    private void startDropAnimator(int height) {
-        ValueAnimator mValueAnimator = ValueAnimator.ofInt(0, height);
-        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-             int value = (int) animation.getAnimatedValue();
-           //     System.out.println(value+"==-=-=-=-=");
-                rtInputViewGroup.setTranslationY(value);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(pickUpAnimationHelper != null) {
+            pickUpAnimationHelper.doRecycleWaste();
+            pickUpAnimationHelper = null;
+        }
+    }
 
-            }
-        });
-        mValueAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                isAnima =false;
-                rtInputViewGroup.setTranslationY(0);
+    @Override
+    public void onGlobalLayout() {
+        Rect r = new Rect();
+        rtMainGroup.getWindowVisibleDisplayFrame(r);
+        int screenHeight = rtMainGroup.getRootView().getHeight();
+        int heightDifference = screenHeight - (r.bottom - r.top);
+        float topHeight = getResources().getDimension(R.dimen.actionbar_height);
+        if(heightDifference > 200) {
+            dropHeight = (int) (r.bottom - topHeight * 2) - r.top;
+            upHeight = dropHeight;
+            if(isDropAnimator && !isUpAnimator) {
+                isDropAnimator =false;
+                rtInputViewGroup.setTranslationY(-dropHeight);
                 RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 mLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 rtInputViewGroup.setLayoutParams(mLayoutParams);
+                mDropAnimator = ValueAnimator.ofInt(-dropHeight, 0);
+                mDropAnimator.addUpdateListener(mDropAnimatorUpdateListener);
+                mDropAnimator.addListener(mDropAnimatorListener);
+                mDropAnimator.setDuration(1000);
+                mDropAnimator.start();
             }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        if(isAnima) {
-            mValueAnimator.setDuration(1000);
-            mValueAnimator.start();
+        } else {
+            upHeight = (int) (screenHeight - topHeight * 2 - r.top);
         }
     }
+
+
+    private ValueAnimator.AnimatorUpdateListener mDropAnimatorUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            int value = (int) animation.getAnimatedValue();
+            float offset =Math.abs((float)value / dropHeight);
+            ivDrop.setAlpha(1.0f - offset);
+            llListsGroup.setAlpha(offset);
+            rtInputViewGroup.setTranslationY(value);
+
+        }
+    };
+
+    private AnimatorListenerAdapter mDropAnimatorListener = new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationStart(Animator animation) {
+            super.onAnimationStart(animation);
+            ivDrop.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            super.onAnimationEnd(animation);
+            llListsGroup.setVisibility(View.GONE);
+            isUpAnimator = true;
+        }
+    };
+
+
+    private ValueAnimator.AnimatorUpdateListener mUpAnimatorUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            int value = (int) animation.getAnimatedValue();
+            float offset = Math.abs((float) value / dropHeight);
+            ivDrop.setAlpha(offset);
+            llListsGroup.setAlpha(1.0f -offset);
+            rtInputViewGroup.setTranslationY(value);
+        }
+    };
+
+    private AnimatorListenerAdapter mUpAnimatorListener = new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationStart(Animator animation) {
+            super.onAnimationStart(animation);
+            llListsGroup.setVisibility(View.VISIBLE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(rtMainGroup.getWindowToken(), 0);
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            super.onAnimationEnd(animation);
+            ivDrop.setVisibility(View.GONE);
+            isDropAnimator =true;
+        }
+    };
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if(id == R.id.iv_drop && !isDropAnimator  && isUpAnimator) {
+            isUpAnimator = false;
+            rtInputViewGroup.setTranslationY(upHeight);
+            RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            rtInputViewGroup.setLayoutParams(mLayoutParams);
+            mUpAnimator = ValueAnimator.ofInt(upHeight, 0);
+            mUpAnimator.setDuration(1000);
+            mUpAnimator.addUpdateListener(mUpAnimatorUpdateListener);
+            mUpAnimator.addListener(mUpAnimatorListener);
+            mUpAnimator.start();
+
+        }
+    }
+
 
 
     private LovelyRecyclerView.OnScrollHeaderOffsetListener mOnScrollHeaderOffsetListener = new LovelyRecyclerView.OnScrollHeaderOffsetListener() {
@@ -254,9 +242,4 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
             mSerchView.setTranslationY(mSerchView.getHeight()  * offset);
         }
     };
-
-    @Override
-    public void onClick(View v) {
-    }
-
 }

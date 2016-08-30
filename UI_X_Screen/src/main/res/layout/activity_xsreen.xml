@@ -55,14 +55,35 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/rls"
+            android:id="@+id/rl_search_group"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/ll_search_content_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/rt_input"
+                android:background="@android:color/holo_blue_dark"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
             <RelativeLayout
                 android:id="@+id/rt_input"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/actionbar_height"
+                android:layout_alignParentStart="true"
                 android:background="@android:color/holo_red_dark">
+
+                <ImageButton
+                    android:id="@+id/iv_drop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:src="@mipmap/btn_search" />
 
             <EditText
                 android:id="@+id/ed"
