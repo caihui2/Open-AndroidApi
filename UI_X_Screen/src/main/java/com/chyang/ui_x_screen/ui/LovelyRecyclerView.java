@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 
 
@@ -40,6 +42,17 @@ public class LovelyRecyclerView extends RecyclerView {
         super(context, attrs);
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+       int action = e.getAction();
+        System.out.println("action:"+ action);
+        switch (action) {
+            case KeyEvent.ACTION_DOWN:
+                System.out.println("我点击了屏幕"+e.getY());
+                break;
+        }
+        return super.onTouchEvent(e);
+    }
 
     public void setOnScrollHeaderOffsetListener(OnScrollHeaderOffsetListener mOnScrollHeaderOffsetListener) {
         this.mOnScrollHeaderOffsetListener = mOnScrollHeaderOffsetListener;
