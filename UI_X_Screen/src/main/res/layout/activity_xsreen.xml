@@ -64,7 +64,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/rt_input"
-                android:background="@android:color/holo_blue_dark"
                 android:orientation="vertical">
 
             </LinearLayout>
@@ -73,8 +72,7 @@
                 android:id="@+id/rt_input"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/actionbar_height"
-                android:layout_alignParentStart="true"
-                android:background="@android:color/holo_red_dark">
+                android:layout_alignParentStart="true">
 
                 <ImageButton
                     android:id="@+id/iv_drop"

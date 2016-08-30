@@ -6,6 +6,8 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +24,7 @@ import com.chyang.ui_x_screen.R;
 import com.chyang.ui_x_screen.Utils.AnimationHelper;
 import com.chyang.ui_x_screen.adapter.X_ScreenAdapter;
 import com.chyang.ui_x_screen.enter.Actor;
+import com.chyang.ui_x_screen.fragment.BlankFragment;
 import com.chyang.ui_x_screen.ui.LovelyRecyclerView;
 
 import java.util.ArrayList;
@@ -138,7 +141,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
                 mDropAnimator = ValueAnimator.ofInt(-dropHeight, 0);
                 mDropAnimator.addUpdateListener(mDropAnimatorUpdateListener);
                 mDropAnimator.addListener(mDropAnimatorListener);
-                mDropAnimator.setDuration(1000);
+                mDropAnimator.setDuration(800);
                 mDropAnimator.start();
             }
         } else {
@@ -154,6 +157,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
             float offset =Math.abs((float)value / dropHeight);
             ivDrop.setAlpha(1.0f - offset);
             llListsGroup.setAlpha(offset);
+            llSearChontentGroup.setAlpha(1.0f - offset);
             rtInputViewGroup.setTranslationY(value);
 
         }
@@ -163,6 +167,11 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onAnimationStart(Animator animation) {
             super.onAnimationStart(animation);
+          FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
+            BlankFragment mBlankFragment = new BlankFragment();
+            mFragmentTransaction.replace(R.id.ll_search_content_group, mBlankFragment);
+            mFragmentTransaction.commit();
             ivDrop.setVisibility(View.VISIBLE);
         }
 
@@ -187,6 +196,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
     };
 
     private AnimatorListenerAdapter mUpAnimatorListener = new AnimatorListenerAdapter() {
+
         @Override
         public void onAnimationStart(Animator animation) {
             super.onAnimationStart(animation);
@@ -213,7 +223,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
             RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             rtInputViewGroup.setLayoutParams(mLayoutParams);
             mUpAnimator = ValueAnimator.ofInt(upHeight, 0);
-            mUpAnimator.setDuration(1000);
+            mUpAnimator.setDuration(800);
             mUpAnimator.addUpdateListener(mUpAnimatorUpdateListener);
             mUpAnimator.addListener(mUpAnimatorListener);
             mUpAnimator.start();
