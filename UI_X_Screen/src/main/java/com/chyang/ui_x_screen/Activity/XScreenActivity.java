@@ -2,6 +2,8 @@ package com.chyang.ui_x_screen.Activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
@@ -48,7 +50,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
     private RelativeLayout rtMainGroup;
     private RelativeLayout rtInputViewGroup;
     private LinearLayout llListsGroup;
-    private LinearLayout llSearChontentGroup;
+    private LinearLayout llSearchContentGroup;
 
 
     private boolean isDropAnimator = true;
@@ -57,8 +59,8 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
     private int dropHeight = -1;
 
 
-    private ValueAnimator mDropAnimator;
-    private ValueAnimator mUpAnimator;
+//    private ValueAnimator mDropAnimator;
+     private ValueAnimator mUpAnimator;
 
 
 
@@ -106,8 +108,8 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         rtInputViewGroup = (RelativeLayout)findViewById(R.id.rt_input);
         llListsGroup = (LinearLayout)findViewById(R.id.ll_lists_group);
         pickUpAnimationHelper = new AnimationHelper(mRecyclerView, mBaseAdapter);
-        llSearChontentGroup = (LinearLayout)findViewById(R.id.ll_search_content_group);
-        llSearChontentGroup.setAlpha(0.0f);
+        llSearchContentGroup = (LinearLayout)findViewById(R.id.ll_search_content_group);
+        llSearchContentGroup.setAlpha(0.0f);
         rtMainGroup.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
 
@@ -135,14 +137,22 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
             if(isDropAnimator && !isUpAnimator) {
                 isDropAnimator =false;
                 rtInputViewGroup.setTranslationY(-dropHeight);
+                llSearchContentGroup.setTranslationY(-dropHeight);
                 RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 mLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 rtInputViewGroup.setLayoutParams(mLayoutParams);
-                mDropAnimator = ValueAnimator.ofInt(-dropHeight, 0);
-                mDropAnimator.addUpdateListener(mDropAnimatorUpdateListener);
-                mDropAnimator.addListener(mDropAnimatorListener);
-                mDropAnimator.setDuration(800);
-                mDropAnimator.start();
+                AnimatorSet mDropAnimatorSet = new AnimatorSet();
+                ObjectAnimator inputViewGroupTY =  ObjectAnimator.ofFloat(rtInputViewGroup, "translationY", -dropHeight, 0);
+                ObjectAnimator llSearchContentGroupTY = ObjectAnimator.ofFloat(llSearchContentGroup,"translationY", -dropHeight, 0);
+                ObjectAnimator llListGroupTY = ObjectAnimator.ofFloat(llListsGroup,"translationY", 0, dropHeight);
+                ObjectAnimator llSearchContentGroupAlpha = ObjectAnimator.ofFloat(llSearchContentGroup , "alpha", 0f, 1f);
+                ObjectAnimator llListGroupAlpha = ObjectAnimator.ofFloat(llListsGroup, "alpha", 1f, 0f);
+                ObjectAnimator ivDrpAlpha = ObjectAnimator.ofFloat(ivDrop, "alpha", 0f, 1f);
+                mDropAnimatorSet.play(inputViewGroupTY).with(llSearchContentGroupTY).with(ivDrpAlpha).with(llListGroupTY).with(llListGroupAlpha).with(llSearchContentGroupAlpha);
+                mDropAnimatorSet.addListener(mDropAnimatorListener);
+                mDropAnimatorSet.setDuration(1000);
+                mDropAnimatorSet.start();
+
             }
         } else {
             upHeight = (int) (screenHeight - topHeight * 2 - r.top);
@@ -150,18 +160,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    private ValueAnimator.AnimatorUpdateListener mDropAnimatorUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            int value = (int) animation.getAnimatedValue();
-            float offset =Math.abs((float)value / dropHeight);
-            ivDrop.setAlpha(1.0f - offset);
-            llListsGroup.setAlpha(offset);
-            llSearChontentGroup.setAlpha(1.0f - offset);
-            rtInputViewGroup.setTranslationY(value);
 
-        }
-    };
 
     private AnimatorListenerAdapter mDropAnimatorListener = new AnimatorListenerAdapter() {
         @Override
@@ -183,17 +182,6 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         }
     };
 
-
-    private ValueAnimator.AnimatorUpdateListener mUpAnimatorUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            int value = (int) animation.getAnimatedValue();
-            float offset = Math.abs((float) value / dropHeight);
-            ivDrop.setAlpha(offset);
-            llListsGroup.setAlpha(1.0f -offset);
-            rtInputViewGroup.setTranslationY(value);
-        }
-    };
 
     private AnimatorListenerAdapter mUpAnimatorListener = new AnimatorListenerAdapter() {
 
@@ -220,13 +208,20 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         if(id == R.id.iv_drop && !isDropAnimator  && isUpAnimator) {
             isUpAnimator = false;
             rtInputViewGroup.setTranslationY(upHeight);
+            llSearchContentGroup.setTranslationY(upHeight);
             RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             rtInputViewGroup.setLayoutParams(mLayoutParams);
-            mUpAnimator = ValueAnimator.ofInt(upHeight, 0);
-            mUpAnimator.setDuration(800);
-            mUpAnimator.addUpdateListener(mUpAnimatorUpdateListener);
-            mUpAnimator.addListener(mUpAnimatorListener);
-            mUpAnimator.start();
+            AnimatorSet mUpAnimatorSet = new AnimatorSet();
+            ObjectAnimator inputViewGroupTY =  ObjectAnimator.ofFloat(rtInputViewGroup, "translationY", upHeight, 0);
+            ObjectAnimator llSearchContentGroupTY = ObjectAnimator.ofFloat(llSearchContentGroup,"translationY", upHeight, 0);
+            ObjectAnimator llListGroupTY = ObjectAnimator.ofFloat(llListsGroup,"translationY", upHeight, 0);
+            ObjectAnimator llListGroupAlpha = ObjectAnimator.ofFloat(llListsGroup, "alpha", 0f, 1f);
+            ObjectAnimator llSearchContentGroupAlpha = ObjectAnimator.ofFloat(llSearchContentGroup , "alpha", 1f, 0f);
+            ObjectAnimator ivDrpAlpha = ObjectAnimator.ofFloat(ivDrop, "alpha", 1f, 0f);
+            mUpAnimatorSet.play(inputViewGroupTY).with(llSearchContentGroupTY).with(ivDrpAlpha).with(llListGroupTY).with(llListGroupAlpha).with(llSearchContentGroupAlpha);
+            mUpAnimatorSet.addListener(mUpAnimatorListener);
+            mUpAnimatorSet.setDuration(1000);
+            mUpAnimatorSet.start();
 
         }
     }
