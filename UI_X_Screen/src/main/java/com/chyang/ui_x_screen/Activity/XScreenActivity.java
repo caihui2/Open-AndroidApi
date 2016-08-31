@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -68,6 +69,8 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_xsreen);
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mRecyclerView = (LovelyRecyclerView) findViewById(R.id.list);
         mActorList = new ArrayList<Actor>();
         Actor anglababy = new Actor("anglababy", R.mipmap.anglababy);
@@ -133,6 +136,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         float topHeight = getResources().getDimension(R.dimen.actionbar_height);
         if(heightDifference > 200) {
             dropHeight = (int) (r.bottom - topHeight * 2) - r.top;
+            System.out.println(dropHeight+"=====he");
             upHeight = dropHeight;
             if(isDropAnimator && !isUpAnimator) {
                 isDropAnimator =false;
