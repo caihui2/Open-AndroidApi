@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.chyang.ui_mycanvasdome.ui.MyLayout1 xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <com.chyang.ui_mycanvasdome.ui.MyLayout2
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:orientation="vertical" >
-        <com.chyang.ui_mycanvasdome.ui.MyTextView
-            android:id="@+id/tv"
-            android:layout_width="200px"
-            android:layout_height="200px"
-            android:background="#FFFFFF"
-            android:text="MyTextView"
-            android:textColor="#0000FF"
-            android:textSize="40sp"
-            android:textStyle="bold" />
-    </com.chyang.ui_mycanvasdome.ui.MyLayout2>
-</com.chyang.ui_mycanvasdome.ui.MyLayout1>
+    <Button
+        android:id="@+id/touch_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="触摸事件测试 "/>
+
+    <Button
+        android:id="@+id/custom_view_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义view1"/>
+</LinearLayout>
