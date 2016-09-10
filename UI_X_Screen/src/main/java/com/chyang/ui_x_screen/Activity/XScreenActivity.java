@@ -69,8 +69,8 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_xsreen);
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mRecyclerView = (LovelyRecyclerView) findViewById(R.id.list);
         mActorList = new ArrayList<Actor>();
         Actor anglababy = new Actor("anglababy", R.mipmap.anglababy);
@@ -136,28 +136,8 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         float topHeight = getResources().getDimension(R.dimen.actionbar_height);
         if(heightDifference > 200) {
             dropHeight = (int) (r.bottom - topHeight * 2) - r.top;
-            System.out.println(dropHeight+"=====he");
-            upHeight = dropHeight;
-            if(isDropAnimator && !isUpAnimator) {
-                isDropAnimator =false;
-                rtInputViewGroup.setTranslationY(-dropHeight);
-                llSearchContentGroup.setTranslationY(-dropHeight);
-                RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                mLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                rtInputViewGroup.setLayoutParams(mLayoutParams);
-                AnimatorSet mDropAnimatorSet = new AnimatorSet();
-                ObjectAnimator inputViewGroupTY =  ObjectAnimator.ofFloat(rtInputViewGroup, "translationY", -dropHeight, 0);
-                ObjectAnimator llSearchContentGroupTY = ObjectAnimator.ofFloat(llSearchContentGroup,"translationY", -dropHeight, 0);
-                ObjectAnimator llListGroupTY = ObjectAnimator.ofFloat(llListsGroup,"translationY", 0, dropHeight);
-                ObjectAnimator llSearchContentGroupAlpha = ObjectAnimator.ofFloat(llSearchContentGroup , "alpha", 0f, 1f);
-                ObjectAnimator llListGroupAlpha = ObjectAnimator.ofFloat(llListsGroup, "alpha", 1f, 0f);
-                ObjectAnimator ivDrpAlpha = ObjectAnimator.ofFloat(ivDrop, "alpha", 0f, 1f);
-                mDropAnimatorSet.play(inputViewGroupTY).with(llSearchContentGroupTY).with(ivDrpAlpha).with(llListGroupTY).with(llListGroupAlpha).with(llSearchContentGroupAlpha);
-                mDropAnimatorSet.addListener(mDropAnimatorListener);
-                mDropAnimatorSet.setDuration(1000);
-                mDropAnimatorSet.start();
 
-            }
+
         } else {
             upHeight = (int) (screenHeight - topHeight * 2 - r.top);
         }
@@ -209,25 +189,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if(id == R.id.iv_drop && !isDropAnimator  && isUpAnimator) {
-            isUpAnimator = false;
-            rtInputViewGroup.setTranslationY(upHeight);
-            llSearchContentGroup.setTranslationY(upHeight);
-            RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            rtInputViewGroup.setLayoutParams(mLayoutParams);
-            AnimatorSet mUpAnimatorSet = new AnimatorSet();
-            ObjectAnimator inputViewGroupTY =  ObjectAnimator.ofFloat(rtInputViewGroup, "translationY", upHeight, 0);
-            ObjectAnimator llSearchContentGroupTY = ObjectAnimator.ofFloat(llSearchContentGroup,"translationY", upHeight, 0);
-            ObjectAnimator llListGroupTY = ObjectAnimator.ofFloat(llListsGroup,"translationY", upHeight, 0);
-            ObjectAnimator llListGroupAlpha = ObjectAnimator.ofFloat(llListsGroup, "alpha", 0f, 1f);
-            ObjectAnimator llSearchContentGroupAlpha = ObjectAnimator.ofFloat(llSearchContentGroup , "alpha", 1f, 0f);
-            ObjectAnimator ivDrpAlpha = ObjectAnimator.ofFloat(ivDrop, "alpha", 1f, 0f);
-            mUpAnimatorSet.play(inputViewGroupTY).with(llSearchContentGroupTY).with(ivDrpAlpha).with(llListGroupTY).with(llListGroupAlpha).with(llSearchContentGroupAlpha);
-            mUpAnimatorSet.addListener(mUpAnimatorListener);
-            mUpAnimatorSet.setDuration(1000);
-            mUpAnimatorSet.start();
 
-        }
     }
 
 

@@ -42,42 +42,29 @@
         android:layout_below="@id/rl_title_group">
 
         <LinearLayout
-            android:id="@+id/ll_lists_group"
+            android:id="@+id/ll_search_content_group"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_above="@+id/rt_input"
+            android:background="@android:color/holo_red_dark"
+            android:orientation="vertical">
 
-            <com.chyang.ui_x_screen.ui.LovelyRecyclerView
-                android:id="@+id/list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="false"
-                android:focusable="false"/>
         </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_search_content_group"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/rt_input"
-                android:background="@android:color/holo_red_dark"
-                android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/rt_input"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/actionbar_height"
+            android:layout_alignParentStart="true">
 
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/rt_input"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/actionbar_height"
-                android:layout_alignParentStart="true">
-
-                <ImageButton
-                    android:id="@+id/iv_drop"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="10dp"
-                    android:background="@android:color/transparent"
-                    android:clickable="true"
-                    android:src="@mipmap/btn_search" />
+            <ImageButton
+                android:id="@+id/iv_drop"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:src="@mipmap/btn_search" />
 
             <EditText
                 android:id="@+id/ed"
@@ -95,6 +82,23 @@
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:src="@mipmap/btn_search" />
+
+        <LinearLayout
+            android:id="@+id/ll_lists_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.chyang.ui_x_screen.ui.LovelyRecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:focusable="false"/>
+        </LinearLayout>
+
+
+
+
             </RelativeLayout>
     </com.chyang.ui_x_screen.ui.DropDownLayout>
 </RelativeLayout>
