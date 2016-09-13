@@ -43,7 +43,7 @@ public class CustomUIActivity1 extends AppCompatActivity implements View.OnClick
             mDragViewGroup.startUp();
             findViewById(R.id.ll1).setVisibility(View.VISIBLE);
         } else if(id == R.id.bt_abc) {
-            mDragViewGroup.startUp(8000, 10);
+            mDragViewGroup.startUp(400, 10111);
         }
     }
 }

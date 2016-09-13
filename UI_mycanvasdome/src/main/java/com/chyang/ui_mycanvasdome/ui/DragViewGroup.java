@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.Scroller;
 
 /**
@@ -34,7 +35,7 @@ public class DragViewGroup extends ViewGroup {
 
     public DragViewGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mScroller = new Scroller(context);
+        mScroller = new Scroller(context, new LinearInterpolator(), false);
 
     }
 
@@ -54,7 +55,12 @@ public class DragViewGroup extends ViewGroup {
         if(getChildCount() > 2) throw  new RuntimeException("view count error");
         if(mTopView == null) mTopView = getChildAt(0);
         if(mContentView == null) mContentView = getChildAt(1);
-        measureChild(mTopView, widthMeasureSpec, heightMeasureSpec);
+        if(mScroller.getFinalY() != 0) {
+            float offset = mScroller.getCurrY() / mScroller.getFinalY();
+            System.out.println(mScroller.getCurrY() + "=-==" + mScroller.getFinalY()+"===="+offset);
+        }
+         int height = MeasureSpec.makeMeasureSpec(Math.abs(mScroller.getCurrY()), heightMode);
+        measureChild(mTopView, widthMeasureSpec, height);
         measureChild(mContentView,widthMeasureSpec, heightMeasureSpec - mGapHeight);
         setMeasuredDimension(sizeWidth, sizeHeight);
     }
@@ -73,7 +79,7 @@ public class DragViewGroup extends ViewGroup {
             int mContentViewHeight = mContentView.getMeasuredHeight();
             if(DBUG) Log.d(TAG,"onLayout: mTopViewWidth:"+mTopViewWidth +"  mTopViewHeight:"+mTopViewHeight + " mContentViewWidth:"+mContentViewWidth +"   mContentViewHeight:"+ mContentViewHeight);
             mContentView.layout(0, 0, mContentViewWidth, mContentViewHeight);
-            mTopView.layout(0, -mContentViewHeight, mTopViewWidth, mTopViewHeight);
+            mTopView.layout(0, mScroller.getCurrY() , mTopViewWidth,  0);
         }
     }
 
@@ -126,6 +132,7 @@ public class DragViewGroup extends ViewGroup {
         super.computeScroll();
         if(mScroller.computeScrollOffset()) {
            scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+            System.out.println((float) (mScroller.getCurrY()));
             requestLayout();
         } else {
             clearChildrenCache();
