@@ -29,7 +29,8 @@ public class CustomUIActivity1 extends AppCompatActivity implements View.OnClick
         mDragViewGroup = (DragViewGroup) findViewById(R.id.dg_view);
         findViewById(R.id.bt_down).setOnClickListener(this);
         findViewById(R.id.bt_up).setOnClickListener(this);
-        mDragViewGroup.setGapHeight(200);
+        findViewById(R.id.bt_abc).setOnClickListener(this);
+        mDragViewGroup.setGapHeight(130);
     }
 
     @Override
@@ -37,8 +38,12 @@ public class CustomUIActivity1 extends AppCompatActivity implements View.OnClick
         int id = v.getId();
         if(id == R.id.bt_down) {
             mDragViewGroup.startDown();
+            findViewById(R.id.ll1).setVisibility(View.GONE);
         } else if(id == R.id.bt_up) {
             mDragViewGroup.startUp();
+            findViewById(R.id.ll1).setVisibility(View.VISIBLE);
+        } else if(id == R.id.bt_abc) {
+            mDragViewGroup.startUp(8000, 10);
         }
     }
 }

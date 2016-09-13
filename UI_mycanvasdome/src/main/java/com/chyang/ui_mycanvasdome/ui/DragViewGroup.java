@@ -1,13 +1,10 @@
 package com.chyang.ui_mycanvasdome.ui;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
 /**
@@ -53,16 +50,18 @@ public class DragViewGroup extends ViewGroup {
         int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
         int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
         if(DBUG) Log.d(TAG, " widthMode:"+ widthMode+"  heightMode:"+ heightMode + "    sizeWidth:"+sizeWidth +"   sizeHeight: "+sizeHeight);
-        measureChildren(widthMeasureSpec, heightMeasureSpec);
+
         if(getChildCount() > 2) throw  new RuntimeException("view count error");
         if(mTopView == null) mTopView = getChildAt(0);
         if(mContentView == null) mContentView = getChildAt(1);
+        measureChild(mTopView, widthMeasureSpec, heightMeasureSpec);
+        measureChild(mContentView,widthMeasureSpec, heightMeasureSpec - mGapHeight);
         setMeasuredDimension(sizeWidth, sizeHeight);
     }
 
     public void setGapHeight(int gapHeight) {
         this.mGapHeight = gapHeight;
-        scrollTo(0,-gapHeight);
+        scrollTo(0, -mGapHeight);
     }
 
     @Override
@@ -73,34 +72,52 @@ public class DragViewGroup extends ViewGroup {
             int mContentViewWidth = mContentView.getMeasuredWidth();
             int mContentViewHeight = mContentView.getMeasuredHeight();
             if(DBUG) Log.d(TAG,"onLayout: mTopViewWidth:"+mTopViewWidth +"  mTopViewHeight:"+mTopViewHeight + " mContentViewWidth:"+mContentViewWidth +"   mContentViewHeight:"+ mContentViewHeight);
-            mContentView.layout(l, t, mContentViewWidth, mContentViewHeight);
-            mTopView.layout(l, -mContentViewHeight, mTopViewWidth, mTopViewHeight);
+            mContentView.layout(0, 0, mContentViewWidth, mContentViewHeight);
+            mTopView.layout(0, -mContentViewHeight, mTopViewWidth, mTopViewHeight);
         }
     }
 
 
-    private void snapToState(int whichState) {
+
+    private void snapToState(int whichState , int scrollValue, int duration) {
         enableChildrenCache();
         //TODO chyang  next  FocusedChild   YES ?
 //        boolean isChange = mCurrentDragState != whichState;
 //        View focusedChild = getFocusedChild();
         int changeValue = whichState - 1;
-        int gap = changeValue == 0 ? -mGapHeight : mGapHeight;
-        int newY = changeValue * getMeasuredHeight();
+        int gap = changeValue  == 0 ? -mGapHeight : mGapHeight;
+        int newY = changeValue *getMeasuredHeight();
         int startY = getScrollY();
         int dy = newY - getScrollY() + gap;
-        mScroller.startScroll(0, startY, 0, dy, 2000);
+        if(scrollValue != -1) {
+            int adsDy = Math.abs(dy);
+            int adsScrollValue =  Math.abs(scrollValue);
+            dy = (whichState == DRAG_STATE_UP ? 1 : - 1) * (adsDy > adsScrollValue ? adsScrollValue : adsDy);
+        }
+        mScroller.startScroll(0, startY, 0, dy, duration);
         invalidate();
     }
 
 
+
+
     public void startDown() {
-        snapToState(DRAG_STATE_DOWN);
+        snapToState(DRAG_STATE_DOWN, -1, 2000);
         mCurrentDragState = DRAG_STATE_DOWN;
     }
 
     public void startUp() {
-        snapToState(DRAG_STATE_UP);
+        snapToState(DRAG_STATE_UP, -1, 2000);
+        mCurrentDragState = DRAG_STATE_UP;
+    }
+
+    public void startDown(int scrollValue, int duration) {
+        snapToState(DRAG_STATE_DOWN, scrollValue, duration);
+        mCurrentDragState = DRAG_STATE_DOWN;
+    }
+
+    public void startUp(int scrollValue, int duration) {
+        snapToState(DRAG_STATE_UP, scrollValue, duration);
         mCurrentDragState = DRAG_STATE_UP;
     }
 
@@ -109,6 +126,7 @@ public class DragViewGroup extends ViewGroup {
         super.computeScroll();
         if(mScroller.computeScrollOffset()) {
            scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+            requestLayout();
         } else {
             clearChildrenCache();
         }
