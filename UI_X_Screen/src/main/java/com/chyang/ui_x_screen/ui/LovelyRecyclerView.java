@@ -70,6 +70,8 @@ public class LovelyRecyclerView extends RecyclerView {
         }
     }
 
+
+
     private float computerHeaderScrollOffset(float height) {
         LinearLayoutManager linearLayoutManager = null;
         float offset = -1;

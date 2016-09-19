@@ -1,11 +1,15 @@
-package com.chyang.ui_mycanvasdome.ui;
+package com.chyang.ui_x_screen.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Scroller;
 
@@ -23,6 +27,10 @@ public class DragViewGroup extends ViewGroup {
     private int mCurrentDragState = DRAG_STATE_UP;
     private int mGapHeight = 0;
 
+    private boolean mIsKeyboardActive = false; //　输入法是否激活
+    private int mKeyboardHeight = 0; // 输入法高度
+    private KeyboardLayoutListener mListener;
+
     private View mTopView;
     private View mContentView;
     private Scroller mScroller;
@@ -36,7 +44,8 @@ public class DragViewGroup extends ViewGroup {
 
     public DragViewGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mScroller = new Scroller(context);
+        mScroller = new Scroller(context, new LinearInterpolator());
+        getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardOnGlobalChangeListener());
 
     }
 
@@ -56,11 +65,7 @@ public class DragViewGroup extends ViewGroup {
         if(getChildCount() > 2) throw  new RuntimeException("view count error");
         if(mTopView == null) mTopView = getChildAt(0);
         if(mContentView == null) mContentView = getChildAt(1);
-        if(mScroller.getFinalY() != 0) {
-            float offset = mScroller.getCurrY() / mScroller.getFinalY();
-            System.out.println(mScroller.getCurrY() + "=-==" + mScroller.getFinalY()+"===="+offset);
-        }
-         //int height = MeasureSpec.makeMeasureSpec(Math.abs(mScroller.getCurrY()), heightMode);
+
         measureChild(mTopView, widthMeasureSpec, heightMeasureSpec);
         measureChild(mContentView,widthMeasureSpec, heightMeasureSpec - mGapHeight);
         setMeasuredDimension(sizeWidth, sizeHeight);
@@ -87,10 +92,17 @@ public class DragViewGroup extends ViewGroup {
 
 
     private void snapToState(int whichState , int scrollValue, int duration) {
-        enableChildrenCache();
+
+
         //TODO chyang  next  FocusedChild   YES ?
 //        boolean isChange = mCurrentDragState != whichState;
 //        View focusedChild = getFocusedChild();
+
+        int targetValue =Math.abs(Math.abs(getScrollY()) - Math.abs(scrollValue + mGapHeight));
+        if(DBUG)Log.d(TAG,"limit scroll condition targetValue:"+targetValue);
+        if(whichState == DRAG_STATE_DOWN && targetValue <= 100) return;
+
+        enableChildrenCache();
         int changeValue = whichState - 1;
         int gap = changeValue  == 0 ? -mGapHeight : mGapHeight;
         int newY = changeValue *getMeasuredHeight();
@@ -104,6 +116,8 @@ public class DragViewGroup extends ViewGroup {
         mScroller.startScroll(0, startY, 0, dy, duration);
         invalidate();
     }
+
+
 
 
 
@@ -140,8 +154,7 @@ public class DragViewGroup extends ViewGroup {
         super.computeScroll();
         if(mScroller.computeScrollOffset()) {
            scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
-            System.out.println((float) (mScroller.getCurrY()));
-         //   requestLayout();
+          // System.out.println((float) (mScroller.getCurrY()));
         } else {
             clearChildrenCache();
         }
@@ -167,5 +180,63 @@ public class DragViewGroup extends ViewGroup {
             final View layout = (View) getChildAt(i);
             layout.setDrawingCacheEnabled(false);
         }
+    }
+
+    private class KeyboardOnGlobalChangeListener implements ViewTreeObserver.OnGlobalLayoutListener {
+
+        int mScreenHeight = 0;
+
+        private int getScreenHeight() {
+            if (mScreenHeight > 0) {
+                return mScreenHeight;
+            }
+            mScreenHeight = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
+                    .getDefaultDisplay().getHeight();
+            return mScreenHeight;
+        }
+
+        @Override
+        public void onGlobalLayout() {
+            Rect rect = new Rect();
+            // 获取当前页面窗口的显示范围
+            ((Activity) getContext()).getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+            int screenHeight = getScreenHeight();
+            int keyboardHeight = screenHeight - rect.bottom; // 输入法的高度
+            boolean isActive = false;
+            if (Math.abs(keyboardHeight) > screenHeight / 5) {
+                isActive = true; // 超过屏幕五分之一则表示弹出了输入法
+                mKeyboardHeight = keyboardHeight;
+                int scrollValue = screenHeight - keyboardHeight - mGapHeight * 2;
+                startDown(scrollValue, 1000);
+            } else  {
+
+            }
+            mIsKeyboardActive = isActive;
+            if (mListener != null) {
+                mListener.onKeyboardStateChanged(isActive, keyboardHeight);
+            }
+        }
+    }
+
+    public void setKeyboardListener(KeyboardLayoutListener listener) {
+        mListener = listener;
+    }
+
+    public KeyboardLayoutListener getKeyboardListener() {
+        return mListener;
+    }
+
+    public boolean isKeyboardActive() {
+        return mIsKeyboardActive;
+    }
+
+
+    public int getKeyboardHeight() {
+        return mKeyboardHeight;
+    }
+
+    public interface KeyboardLayoutListener {
+
+        void onKeyboardStateChanged(boolean isActive, int keyboardHeight);
     }
 }

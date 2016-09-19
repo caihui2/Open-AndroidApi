@@ -35,27 +35,38 @@
         android:background="@android:color/transparent"
         android:src="@mipmap/btn_search" />
 
-    <com.chyang.ui_x_screen.ui.DropDownLayout
+    <com.chyang.ui_x_screen.ui.DragViewGroup
         android:id="@+id/rl_content_group"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_title_group">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/ll_search_content_group"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/rt_input"
-            android:background="@android:color/holo_red_dark"
             android:orientation="vertical">
 
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/ll_lists_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:focusable="false" />
+
+        <RelativeLayout
             android:id="@+id/rt_input"
             android:layout_width="match_parent"
             android:layout_height="@dimen/actionbar_height"
-            android:layout_alignParentStart="true">
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
             <ImageButton
                 android:id="@+id/iv_drop"
@@ -83,22 +94,10 @@
                 android:clickable="true"
                 android:src="@mipmap/btn_search" />
 
-        <LinearLayout
-            android:id="@+id/ll_lists_group"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.chyang.ui_x_screen.ui.LovelyRecyclerView
-                android:id="@+id/list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="false"
-                android:focusable="false"/>
-        </LinearLayout>
 
 
+        </RelativeLayout>
 
-
-            </RelativeLayout>
-    </com.chyang.ui_x_screen.ui.DropDownLayout>
+        </RelativeLayout>
+    </com.chyang.ui_x_screen.ui.DragViewGroup>
 </RelativeLayout>

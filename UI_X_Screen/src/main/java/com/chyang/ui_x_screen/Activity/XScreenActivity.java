@@ -7,12 +7,15 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -22,47 +25,53 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.chyang.ui_x_screen.R;
 import com.chyang.ui_x_screen.Utils.AnimationHelper;
 import com.chyang.ui_x_screen.adapter.X_ScreenAdapter;
 import com.chyang.ui_x_screen.enter.Actor;
 import com.chyang.ui_x_screen.fragment.BlankFragment;
+import com.chyang.ui_x_screen.ui.DragViewGroup;
 import com.chyang.ui_x_screen.ui.LovelyRecyclerView;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class XScreenActivity extends AppCompatActivity implements View.OnClickListener, ViewTreeObserver.OnGlobalLayoutListener{
+public class XScreenActivity extends AppCompatActivity implements View.OnClickListener, ViewTreeObserver.OnGlobalLayoutListener {
 
     private static final String TAG = "XScreenActivity";
-    private LovelyRecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     private List<Actor> mActorList;
     private X_ScreenAdapter mBaseAdapter;
     private LinearLayoutManager mLinearLayoutManager;
 
-    private AnimationHelper pickUpAnimationHelper;
 
     private ImageButton mSerchView;
     private ImageButton mSerchViewIn;
     private ImageButton ivDrop;
     private EditText mEditText;
 
+
     private RelativeLayout rtMainGroup;
     private RelativeLayout rtInputViewGroup;
-    private LinearLayout llListsGroup;
+    private DragViewGroup rvContentGroup;
+    private ViewGroup llListsGroup;
     private LinearLayout llSearchContentGroup;
 
+    private float headViewHeight;
+    private InputMethodManager imm;
 
-    private boolean isDropAnimator = true;
-    private boolean isUpAnimator = false;
-    private int upHeight = -1;
-    private int dropHeight = -1;
-
-
-//    private ValueAnimator mDropAnimator;
-     private ValueAnimator mUpAnimator;
-
+    private static final int DROP_MOVE_NORM = 300;
+    private float dropHeight;
+    private float upHeight;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
 
 
     @Override
@@ -71,7 +80,7 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_xsreen);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        mRecyclerView = (LovelyRecyclerView) findViewById(R.id.list);
+        mRecyclerView = (RecyclerView) findViewById(R.id.list);
         mActorList = new ArrayList<Actor>();
         Actor anglababy = new Actor("anglababy", R.mipmap.anglababy);
         Actor fanbingbing = new Actor("范冰冰", R.mipmap.fanbingbing);
@@ -87,15 +96,14 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         mActorList.add(tangyan);
         mActorList.add(yangmi);
         mActorList.add(zhaoliyin);
-        mLinearLayoutManager =  new LinearLayoutManager(this);
+        mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mBaseAdapter = new X_ScreenAdapter(this);
         mBaseAdapter.setActor(mActorList);
         mRecyclerView.setAdapter(mBaseAdapter);
-        mRecyclerView.scheduleLayoutAnimation();
-        mRecyclerView.setOnScrollHeaderOffsetListener(mOnScrollHeaderOffsetListener);
-
+        mRecyclerView.addOnScrollListener(mOnScrollListener);
+        headViewHeight = getResources().getDimension(R.dimen.actionbar_height);
 
 
         mSerchView = (ImageButton) findViewById(R.id.iv_search);
@@ -103,114 +111,96 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
         mSerchView.setOnClickListener(this);
         mEditText = (EditText) findViewById(R.id.ed);
         ivDrop = (ImageButton) findViewById(R.id.iv_drop);
-        ivDrop.setOnClickListener(this);
-        ivDrop.setAlpha(0.0f);
-        ivDrop.setVisibility(View.GONE);
+        ivDrop.setAlpha(0f);
+        mEditText.setOnEditorActionListener(mOnEditorActionListener);
 
-        rtMainGroup = (RelativeLayout)findViewById(R.id.rl_main_group);
-        rtInputViewGroup = (RelativeLayout)findViewById(R.id.rt_input);
-        llListsGroup = (LinearLayout)findViewById(R.id.ll_lists_group);
-        pickUpAnimationHelper = new AnimationHelper(mRecyclerView, mBaseAdapter);
-        llSearchContentGroup = (LinearLayout)findViewById(R.id.ll_search_content_group);
-        llSearchContentGroup.setAlpha(0.0f);
-        rtMainGroup.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        rtMainGroup = (RelativeLayout) findViewById(R.id.rl_main_group);
+        rtInputViewGroup = (RelativeLayout) findViewById(R.id.rt_input);
+        llListsGroup = (ViewGroup) findViewById(R.id.ll_lists_group);
+        rvContentGroup = (DragViewGroup) findViewById(R.id.rl_content_group);
+        llSearchContentGroup = (LinearLayout) findViewById(R.id.ll_search_content_group);
+        rvContentGroup.setGapHeight((int) headViewHeight);
 
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(pickUpAnimationHelper != null) {
-            pickUpAnimationHelper.doRecycleWaste();
-            pickUpAnimationHelper = null;
-        }
     }
+
 
     @Override
     public void onGlobalLayout() {
-        Rect r = new Rect();
-        rtMainGroup.getWindowVisibleDisplayFrame(r);
+        Rect mRect = new Rect();
+        rtMainGroup.getWindowVisibleDisplayFrame(mRect);
         int screenHeight = rtMainGroup.getRootView().getHeight();
-        int heightDifference = screenHeight - (r.bottom - r.top);
-        float topHeight = getResources().getDimension(R.dimen.actionbar_height);
-        if(heightDifference > 200) {
-            dropHeight = (int) (r.bottom - topHeight * 2) - r.top;
-
-
+        int visibleDisplayHeight = mRect.bottom - mRect.top;
+        int keyboardHeight = screenHeight - visibleDisplayHeight;
+        if (keyboardHeight > DROP_MOVE_NORM) {
+            dropHeight = visibleDisplayHeight - headViewHeight * 2;
+            upHeight = dropHeight;
+            System.out.println("laile " + dropHeight);
+            rvContentGroup.startDown((int) dropHeight, 1000);
         } else {
-            upHeight = (int) (screenHeight - topHeight * 2 - r.top);
+            upHeight = screenHeight - headViewHeight * 2 - mRect.top;
         }
     }
 
-
-
-
-    private AnimatorListenerAdapter mDropAnimatorListener = new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationStart(Animator animation) {
-            super.onAnimationStart(animation);
-          FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction mFragmentTransaction = fragmentManager.beginTransaction();
-            BlankFragment mBlankFragment = new BlankFragment();
-            mFragmentTransaction.replace(R.id.ll_search_content_group, mBlankFragment);
-            mFragmentTransaction.commit();
-            ivDrop.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            super.onAnimationEnd(animation);
-            llListsGroup.setVisibility(View.GONE);
-            isUpAnimator = true;
-        }
-    };
-
-
-    private AnimatorListenerAdapter mUpAnimatorListener = new AnimatorListenerAdapter() {
-
-        @Override
-        public void onAnimationStart(Animator animation) {
-            super.onAnimationStart(animation);
-            llListsGroup.setVisibility(View.VISIBLE);
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(rtMainGroup.getWindowToken(), 0);
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            super.onAnimationEnd(animation);
-            ivDrop.setVisibility(View.GONE);
-            isDropAnimator =true;
-        }
-    };
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-
+        if (id == R.id.ed) {
+            System.out.println("lailehah");
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
 
-
-    private LovelyRecyclerView.OnScrollHeaderOffsetListener mOnScrollHeaderOffsetListener = new LovelyRecyclerView.OnScrollHeaderOffsetListener() {
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
-        public float getHeaderHeight() {
-            return getResources().getDimension(R.dimen.x_screen_header_height);
-        }
-
-        @Override
-        public void onHeaderScrollOffset(float offset) {
-            mEditText.setAlpha(offset);
-            if(offset == 1) {
-                mSerchView.setVisibility(View.GONE);
-                mSerchViewIn.setVisibility(View.VISIBLE);
-            } else {
-                mSerchViewIn.setVisibility(View.GONE);
-                mSerchView.setVisibility(View.VISIBLE);
-            }
-            mSerchView.setTranslationY(mSerchView.getHeight()  * offset);
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            float offset = Math.max((headViewHeight - getTopScrollOffset(recyclerView)) / headViewHeight, 0f);
+            searchBarChange(offset);
         }
     };
+
+
+    private void searchBarChange(float offset) {
+        mEditText.setAlpha(offset);
+        if (offset == 1) {
+            mSerchView.setVisibility(View.GONE);
+            mSerchViewIn.setVisibility(View.VISIBLE);
+        } else {
+            mSerchViewIn.setVisibility(View.GONE);
+            mSerchView.setVisibility(View.VISIBLE);
+            mEditText.getText().clear();
+//            edSearchIn.clearFocus();
+        }
+        mSerchView.setTranslationY(mSerchView.getHeight() * offset);
+    }
+
+
+    private float getTopScrollOffset(RecyclerView view) {
+        View cHeadView = mLinearLayoutManager.getChildAt(0);
+        if (cHeadView == null) return 0;
+        int cTopPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+        int cTopOffset = cHeadView.getTop();
+        float headHeight = 0;
+        if (cTopPosition >= 1) headHeight = headViewHeight;
+        return -cTopOffset + cTopPosition * cHeadView.getHeight() + headHeight;
+    }
+
+    private TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            System.out.println("laile ha");
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+            return false;
+        }
+    };
+
 }
