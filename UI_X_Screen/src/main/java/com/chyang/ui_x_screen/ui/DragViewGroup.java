@@ -4,14 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Scroller;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by chyang on 2016/9/10.
@@ -23,6 +28,9 @@ public class DragViewGroup extends ViewGroup {
     public static final int DRAG_STATE_INVALID = -1;
     public static final int DRAG_STATE_DOWN = 0;
     public static final int DRAG_STATE_UP = 1;
+
+    public static final int DRAG_STATE_DOWN_VALUE = 3;
+    public static final int DRAG_STATE_UP_VALUE = 4;
 
     private int mCurrentDragState = DRAG_STATE_UP;
     private int mGapHeight = 0;
@@ -118,9 +126,53 @@ public class DragViewGroup extends ViewGroup {
     }
 
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                System.out.println("OnIntercept: ACTION_DOWN");
+                break;
+            case MotionEvent.ACTION_UP:
+                System.out.println("OnIntercept: ACTION_UP");
+                break;
+            case MotionEvent.ACTION_MOVE:
+                System.out.println("OnIntercept: ACTION_MOVE");
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                System.out.println("OnIntercept: ACTION_CANCEL");
+                break;
+            default:
+                System.out.println("default: "+ action);
+                break;
+        }
+        return super.onInterceptTouchEvent(ev);
+    }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
 
+        int action = event.getAction();
 
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                System.out.println("onTouch: ACTION_DOWN");
+                break;
+            case MotionEvent.ACTION_UP:
+                System.out.println("onTouch: ACTION_UP");
+                break;
+            case MotionEvent.ACTION_MOVE:
+                System.out.println("onTouch: ACTION_MOVE");
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                System.out.println("onTouch: ACTION_CANCEL");
+                break;
+            default:
+                System.out.println("default: "+ action);
+                break;
+        }
+        return super.onTouchEvent(event);
+    }
 
     public void startDown() {
         snapToState(DRAG_STATE_DOWN, -1, 800);
@@ -134,12 +186,12 @@ public class DragViewGroup extends ViewGroup {
 
     public void startDown(int scrollValue, int duration) {
         snapToState(DRAG_STATE_DOWN, scrollValue, duration);
-        mCurrentDragState = DRAG_STATE_DOWN;
+        mCurrentDragState = DRAG_STATE_DOWN_VALUE;
     }
 
     public void startUp(int scrollValue, int duration) {
         snapToState(DRAG_STATE_UP, scrollValue, duration);
-        mCurrentDragState = DRAG_STATE_UP;
+        mCurrentDragState = DRAG_STATE_UP_VALUE;
     }
 
     @Override
@@ -206,10 +258,19 @@ public class DragViewGroup extends ViewGroup {
             if (Math.abs(keyboardHeight) > screenHeight / 5) {
                 isActive = true; // 超过屏幕五分之一则表示弹出了输入法
                 mKeyboardHeight = keyboardHeight;
-                int scrollValue = screenHeight - keyboardHeight - mGapHeight * 2;
-                startDown(scrollValue, 1000);
-            } else  {
-
+                //TODO TEMP
+                if(mCurrentDragState == DRAG_STATE_UP) {
+                    int scrollValue = screenHeight - keyboardHeight - mGapHeight * 2;
+                    startDown(scrollValue, 1000);
+                }
+                else if(mCurrentDragState == DRAG_STATE_DOWN) {
+                    startUp(20, 10);
+                }
+            }
+            else  {
+                if(mCurrentDragState == DRAG_STATE_DOWN_VALUE || mCurrentDragState == DRAG_STATE_UP_VALUE) {
+                    startDown();
+                }
             }
             mIsKeyboardActive = isActive;
             if (mListener != null) {
@@ -217,6 +278,7 @@ public class DragViewGroup extends ViewGroup {
             }
         }
     }
+
 
     public void setKeyboardListener(KeyboardLayoutListener listener) {
         mListener = listener;

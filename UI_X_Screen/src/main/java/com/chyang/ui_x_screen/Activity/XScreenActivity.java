@@ -149,6 +149,8 @@ public class XScreenActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
+
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
