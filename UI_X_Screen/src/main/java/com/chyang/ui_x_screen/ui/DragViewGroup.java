@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -39,6 +40,13 @@ public class DragViewGroup extends ViewGroup {
     private int mKeyboardHeight = 0; // 输入法高度
     private KeyboardLayoutListener mListener;
 
+    private final static int TOUCH_STATE_REST = 0;
+    private final static int TOUCH_STATE_SCROLLING = 1;
+    public int mTouchState = TOUCH_STATE_REST;
+    private int mTouchSlop;
+
+    private boolean mLockTouch = false;
+
     private View mTopView;
     private View mContentView;
     private Scroller mScroller;
@@ -54,6 +62,7 @@ public class DragViewGroup extends ViewGroup {
         super(context, attrs);
         mScroller = new Scroller(context, new LinearInterpolator());
         getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardOnGlobalChangeListener());
+        mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
 
     }
 
@@ -129,6 +138,15 @@ public class DragViewGroup extends ViewGroup {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         int action = ev.getAction();
+        if(action == MotionEvent.ACTION_MOVE && mLockTouch) {
+            return true;
+        }
+
+        float x  = ev.getX();
+        float y  = ev.getY();
+
+        System.out.println(mTouchSlop+"===========");
+
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 System.out.println("OnIntercept: ACTION_DOWN");
@@ -146,7 +164,8 @@ public class DragViewGroup extends ViewGroup {
                 System.out.println("default: "+ action);
                 break;
         }
-        return super.onInterceptTouchEvent(ev);
+
+        return mTouchState != TOUCH_STATE_REST;
     }
 
     @Override
@@ -171,7 +190,15 @@ public class DragViewGroup extends ViewGroup {
                 System.out.println("default: "+ action);
                 break;
         }
-        return super.onTouchEvent(event);
+        return true;
+    }
+
+    public void unlockTouch() {
+        mLockTouch = false;
+    }
+
+    public void lockTouch() {
+        mLockTouch = true;
     }
 
     public void startDown() {
